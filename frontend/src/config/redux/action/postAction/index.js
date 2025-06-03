@@ -60,7 +60,7 @@ export const deletePost = createAsyncThunk(
 
             return thunkAPI.fulfillWithValue(response.data)
         }catch(err){
-            return thunkAPI.rejectWithValue("Somthing Went Wrong")
+            return thunkAPI.rejectWithValue(err.response.data)
         }
     }
 )
@@ -96,7 +96,7 @@ export const getAllComments = createAsyncThunk(
             })
 
         }catch(err){
-            return thunkAPI.rejectWithValue("Somthing went wrong");
+            return thunkAPI.rejectWithValue(err.response.data);
         }
     }
 )
