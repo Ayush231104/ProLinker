@@ -1,0 +1,22 @@
+.allUserProfile{
+    max-width: 80%;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.userCard{
+    display: flex;
+    padding: 1.3rem;
+    margin: 0.5rem 0 0.5rem 0;
+    border-radius: 10px;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.1);
+}
+
+.userCard_image{
+    width: 10%;
+    border-radius: 50%;
+}

@@ -1,0 +1,8 @@
+# Specific to backend
+dist/
+.env.local
+
+# Common ignores
+.DS_Store
+node_modules/
+.env
