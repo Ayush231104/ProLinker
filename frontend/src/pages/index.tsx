@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import styles from "../styles/Home.module.css";
 import UserLayout from "@/layout/UserLayout";
+import Image from "next/image";
 
 export default function Home() {
 
@@ -25,7 +26,7 @@ export default function Home() {
           </div>
 
           <div className={styles.mainContainer_right}>
-            <img src="/images/conn.png" alt="connect people" />
+            <Image src="/images/conn.png" alt="connect people" />
           </div>
 
         </div>

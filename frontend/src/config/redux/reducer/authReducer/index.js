@@ -41,7 +41,7 @@ const authSlice = createSlice({
         state.isLoading = true;
         state.message = "Knoking the door...";
       })
-      .addCase(loginUser.fulfilled, (state, action) => {
+      .addCase(loginUser.fulfilled, (state) => {
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
@@ -57,7 +57,7 @@ const authSlice = createSlice({
         state.isLoading = true;
         state.message = "Registering You...";
       })
-      .addCase(registerUser.fulfilled, (state, action) => {
+      .addCase(registerUser.fulfilled, (state) => {
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
