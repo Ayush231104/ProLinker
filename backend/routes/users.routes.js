@@ -18,17 +18,39 @@ import multer from "multer";
 
 const router = Router();
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/");
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  },
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, "uploads/");
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, file.originalname);
+//   },
+// });
+
+// const upload = multer({ storage: storage });
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import { v2 as cloudinary } from "cloudinary"; 
+
+const CLOUDINARY_CLOUD_NAME = "dsltmyule"
+const CLOUDINARY_API_KEY = "269164698769599"
+const CLOUDINARY_API_SECRET = "GjyIqrv39ZFmyueJD4-0CcmqqGo"
+
+cloudinary.config({
+    cloud_name: CLOUDINARY_CLOUD_NAME,
+    api_key: CLOUDINARY_API_KEY,
+    api_secret: CLOUDINARY_API_SECRET
 });
 
-const upload = multer({ storage: storage });
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: "linkPost", // folder name in Cloudinary
+        allowed_formats: ["jpg", "jpeg", "png"],
+        transformation: [{ width: 500, height: 500, crop: "limit" }],
+    },
+});
 
+const upload = multer({ storage });
 router
   .route("/update_profile_picture")
   .post(upload.single("profile_picture"), uploadProfilePicture);

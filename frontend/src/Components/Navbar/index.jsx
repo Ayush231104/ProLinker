@@ -12,8 +12,8 @@ export default function NavBarComponent() {
   const authState = useSelector((state) => state.auth);
 
   return (
-    <div className={styles.container}>
-      <nav className={styles.navBar}>
+    <div className="p-5 shadow-xl w-full">
+      <nav className="flex items-center justify-between lg:mx-13">
         <h1
          
           onClick={() => {

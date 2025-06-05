@@ -88,7 +88,7 @@ export default function ProfilePage() {
                           <input onChange={(e) => {
                             updateProfilePicture(e.target.files[0])
                           }} style={{display:"none"}} type="file" name="profilePicture" id="profilePictureUpload" />
-                          <img src={`${BASE_URL}/${userProfile.userId.profilePicture}`} alt="backdrop" />
+                          <img src={userProfile.userId.profilePicture} alt="backdrop" />
                       </div>
             
                       <div className={styles.profileContainer_details}>
