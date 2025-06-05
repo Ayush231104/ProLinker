@@ -1,13 +1,13 @@
-.scrollComponent{
+/* .scrollComponent{
     display: flex;
     justify-content: center;
-}
-.wrapper{
+} */
+/* .wrapper{
     display: flex;
     flex-direction: column;
     gap: 1.3rem;
     max-width: 80%;
-}
+} */
 .createPostContainer{
     display: flex;
     height: 10svh;

@@ -45,9 +45,9 @@ export default function Dashboard() {
             <UserLayout>
                 <DashboardLayout>
 
-                    <div className={styles.scrollComponent}>
+                    <div className="flex justify-center">
                         
-                        <div className={styles.wrapper}>
+                        <div className="flex flex-col gap-4 w-full max-w-xl">
                             <div className={styles.createPostContainer}>
                                 
                                 <img className={styles.userProfile} src={`${BASE_URL}/${authState.user.userId.profilePicture}`} alt="" />
