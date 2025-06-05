@@ -1,13 +1,13 @@
-/* .scrollComponent{
+.scrollComponent{
     display: flex;
     justify-content: center;
-} */
-/* .wrapper{
+}
+.wrapper{
     display: flex;
     flex-direction: column;
     gap: 1.3rem;
     max-width: 80%;
-} */
+}
 /* .createPostContainer{
     display: flex;
     height: fit-content;
@@ -19,12 +19,12 @@
     background-color: white;
     border-radius: 15px;
 } */
-/* 
+
 .userProfile{
     border-radius: 100%;
     width: fit-content;
     height: 60%;
-} */
+}
 
 .createPostContainer>textarea{
     width: 100%;
@@ -45,14 +45,7 @@
 }
 
 .uploadButton {
-    position: absolute;
-    right: 0;
-    bottom: -50%;
-    background-color: skyblue;
-    color: aliceblue;
-    border-radius: 10px;
-    padding-inline: 1.3rem;
-    padding-block: 0.5rem;
+    bottom: -20%;
     cursor: pointer;
     border: none;
     font-weight: 600;
@@ -78,11 +71,11 @@
     outline: none;
 }
 
-.singleCard{
+/* .singleCard{
     width: 100%;
     border-radius: 10px 10px 0 0;
     border-bottom: 1px solid rgb(179, 179, 179);
-}
+} */
 
 .singleCard_profileContainer{
     display: flex;
@@ -99,7 +92,6 @@
 
 .singleCard_image{
     width: 100%;
-    padding-top: 0.6rem;
     height: fit-content;
     overflow: hidden;
 

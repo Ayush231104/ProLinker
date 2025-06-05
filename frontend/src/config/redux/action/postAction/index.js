@@ -27,10 +27,12 @@ export const createPost = createAsyncThunk(
             formData.append("token", localStorage.getItem('token'))
             formData.append("body", body)
             formData.append("media", file)
-            for (let [key, value] of formData.entries()) {
-                    console.log(`${key}:`, value);
+
+            const response = await clientServer.post("/post", formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
                 }
-            const response = await clientServer.post("/post", formData);//, {headers: {'Content-Type': 'multipart/form-data'}}
+            })
 
             if(response.status == 200){
                 return thunkAPI.fulfillWithValue("Post Uploaded");
