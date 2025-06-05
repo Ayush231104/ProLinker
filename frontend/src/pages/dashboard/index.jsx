@@ -117,7 +117,7 @@ export default function Dashboard() {
                         <div>
                           <div
                             style={{
-                              display: "flex",
+                              display: "",
                               gap: "1.2rem",
                               justifyContent: "space-between",
                             }}
