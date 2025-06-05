@@ -154,12 +154,13 @@ export const increment_likes = async (req, res) => {
 
   try {
     const post = await Post.findOne({ _id: post_id });
+    // const post = await Post.findById(post_id);
 
     if (!post) {
       return res.status(404).json({ message: "Post Not Found" });
     }
 
-    post.likes = post.likes + 1;
+    post.likes = (post.likes || 0) + 1;
 
     await post.save();
 

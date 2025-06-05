@@ -9,17 +9,12 @@ const PostSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    likes:{
+    likes:[{
         type: Number,
         default: 0
-    },
-    liked_by: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-        },
-      ],
+    }],
     createdAt:{
+        
         type: Date,
         default: Date.now
     },

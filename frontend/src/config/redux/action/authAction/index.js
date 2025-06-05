@@ -48,7 +48,7 @@ export const registerUser = createAsyncThunk(
   );
 
 export const getAboutUser = createAsyncThunk(
-  "user/getUserAndProfile",
+  "user/getAboutUser",
   async (user, thunkAPI) => {
     try{
 

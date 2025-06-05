@@ -12,7 +12,7 @@ export default function NavBarComponent() {
   const authState = useSelector((state) => state.auth);
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} px-10`}>
       <nav className={styles.navBar}>
         <h1
           style={{
@@ -22,7 +22,7 @@ export default function NavBarComponent() {
             router.push("/");
           }}
         >
-          Pro Connect
+          Pro Linker
         </h1>
 
         <div className={styles.navBarOptionContainer}>
