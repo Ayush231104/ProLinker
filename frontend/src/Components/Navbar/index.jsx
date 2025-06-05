@@ -12,7 +12,7 @@ export default function NavBarComponent() {
   const authState = useSelector((state) => state.auth);
 
   return (
-    <div className="p-5 shadow-2xl shadow-gray-900 w-full">
+    <div className="p-5 shadow-xl  w-full">
       <nav className="flex items-center justify-between lg:mx-13">
         <h1
          

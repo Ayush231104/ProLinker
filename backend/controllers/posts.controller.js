@@ -158,7 +158,7 @@ export const increment_likes = async (req, res) => {
     if (!post) {
       return res.status(404).json({ message: "Post Not Found" });
     }
-
+    
     post.likes = post.likes + 1;
 
     await post.save();
