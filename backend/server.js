@@ -18,7 +18,7 @@ app.use(userRoutes);
 
 const start = async () => {
   try {
-    const connectDB = await mongoose
+     await mongoose
       .connect(process.env.MONGO_URI)
       .then(() => console.log("MongoDB connected"))
       .catch((err) => console.error("MongoDB connection error:", err));

@@ -26,7 +26,7 @@ export default function Home() {
           </div>
 
           <div className={styles.mainContainer_right}>
-            <Image src="/images/conn.png" alt="connect people" />
+            <Image width={800} height={600} src="/images/conn.png" alt="connect people" />
           </div>
 
         </div>

@@ -12,33 +12,32 @@ export default function NavBarComponent() {
   const authState = useSelector((state) => state.auth);
 
   return (
-    <div className={styles.container}>
-      <nav className={styles.navBar}>
+    <div className="p-5 shadow-2xl shadow-gray-900 w-full">
+      <nav className="flex items-center justify-between lg:mx-13">
         <h1
-          style={{
-            cursor: "pointer",
-          }}
+         
           onClick={() => {
             router.push("/");
           }}
+          className=" text-xl sm:text-xl md:text-2xl font-extrabold cursor-pointer"
         >
-          Pro Connect
+          Pro Linker
         </h1>
 
         <div className={styles.navBarOptionContainer}>
           {authState.profileFetched && 
-            <div style={{display: "flex", gap: "1.2rem"}}>
+            <div className="flex gap-4 font-bold cursor-pointer text-lg md:text-xl">
               {/* <p>Hey, {authState.user.userId.name}</p> */}
               
               <p onClick={()=>{
                 router.push("/profile");
-              }} style={{fontWeight: "bold", cursor: "pointer"}}>Profile</p>
+              }}  >Profile</p>
               
               <p onClick={() => {
                 localStorage.removeItem("token");
                 router.push("/login");
                 dispatch(reset());
-              }} style={{fontWeight: "bold", cursor: "pointer"}}>Logout</p>
+              }} >Logout</p>
             
             </div>
           }
