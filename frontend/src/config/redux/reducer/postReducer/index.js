@@ -43,21 +43,6 @@ const postSlice = createSlice({
             state.postId = action.payload.post_id;
             state.comments = action.payload.comments;
         })
-        .addCase(createPost.pending, (state) => {
-        state.isLoading = true;
-        state.message = "Uploading post...";
-        })
-        .addCase(createPost.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.message = action.payload; // "Post Uploaded"
-        })
-        .addCase(createPost.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload || "Failed to upload post";
-        })
-
     }
 })
 

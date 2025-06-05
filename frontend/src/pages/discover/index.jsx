@@ -24,21 +24,25 @@ export default function DiscoverPage() {
   return (
     <UserLayout>
         <DashboardLayout>
-            <div>
-            <h1>Discover</h1>
+            <div className='bg-amber-50 '>
+            <h1 className='bg-white mb-3 font-bold p-5 text-2xl'>Discover</h1>
 
-            <div className={styles.allUserProfile}>
+            <div className=" max-w-full flex items-center flex-col gap-3">
 
                 {authState.all_profiles_fetched && authState.all_users.map((user) => {
                     if (!user?.userId) return null;
                     return (
                         <div onClick={()=>{
                             router.push(`/view_profile/${user.userId.username}`)
-                        }} key={user._id} className={styles.userCard}>
-                            <img className={styles.userCard_image} src={`${BASE_URL}/${user.userId.profilePicture}`} alt="Profile" />
+                        }} key={user._id} className="bg-white rounded-lg flex w-full items-center justify-start p-5 gap-5">
+                            <img className={` rounded-full size-15 lg:w-full ${styles.userCard_image}`} src={user.userId.profilePicture} alt="Profile" />
                             <div>
                                 <h2>{user.userId.name}</h2>
                                 <p>{user.userId.username}</p>
+                            </div>
+                            <div>
+                                <h1 className='font-bold'>Bio</h1>
+                                <h2>{user.bio}</h2>
                             </div>
                         </div>
                     )

@@ -43,21 +43,21 @@ export default function Dashboard() {
   const [commentText, setCommentText] = useState("");
 
   const handleUpload = async () => {
-    await dispatch(createPost({ file: fileContent, body: postContent }));
-    setPostContent("");
-    setFileContent(null);
-    dispatch(getAllPosts());
+        await dispatch(createPost({ file: fileContent, body: postContent }));
+        setPostContent("");
+        setFileContent(null);
+        dispatch(getAllPosts());
   };
 
   if (authState.user) {
     return (
       <UserLayout>
         <DashboardLayout>
-          <div className="flex justify-center flex-col bg-amber-50 gap-5">
+          <div className="flex justify-center flex-col bg-amber-50 gap-1">
             <div className="flex justify-center items-center">
-                <div className="bg-white shadow-xl rounded-lg w-full flex h-fit items-center p-5 justify-center gap-6">
+                <div className= " relative bg-white shadow-xl rounded-lg w-full flex h-fit items-center p-5 justify-center gap-6">
                   <img
-                    className="rounded-full size-15  "
+                    className="rounded-full size-13"
                     src={authState.user.userId.profilePicture}
                     alt=""
                   />
@@ -93,20 +93,25 @@ export default function Dashboard() {
                     hidden
                     id="fileUpload"
                   />
-                  {postContent.length > 0 && (
-                    <div onClick={handleUpload} className={styles.uploadButton}>
+                 {postContent.length > 0 && (
+                    <div onClick={handleUpload} className={`${styles.uploadButton} absolute right-0 bg-sky-500 text-blue-50 rounded-lg px-6 py-1 `}>
                       Post
                     </div>
                   )}
                 </div>
           </div>
 
-            <div className="bg-amber-50">
-              <div className="bg-white">
+          <div className="flex items-center">
+                  <div className="  h-[0.1rem] flex-11/12 bg-gray-400"></div>
+                  <p className=" font-100 text-sm flex-1/12">Top feed</p>
+          </div>
+
+            <div className="">
+              <div className="flex flex-col bg-amber-50 rounded-lg gap-3">
                 {postState.posts.map((post) => {
                   if (!post.userId) return null;
                   return (
-                    <div key={post._id} className={styles.singleCard}>
+                    <div key={post._id} className="bg-white rounded-lg shadow-xl">
                       <div className={styles.singleCard_profileContainer}>
                         <img
                           className="rounded-full size-15"
@@ -114,13 +119,7 @@ export default function Dashboard() {
                           alt=""
                         />
                         <div>
-                          <div
-                            style={{
-                              display: "flex",
-                              gap: "1.2rem",
-                              justifyContent: "space-between",
-                            }}
-                          >
+                          <div className="flex gap-0.5 justify-between">
                             <p style={{ fontWeight: "bold" }}>
                               {post.userId.name}
                             </p>
@@ -175,9 +174,9 @@ export default function Dashboard() {
                             )}
                           </p>
 
-                          <div className={styles.singleCard_image}>
+                          <div className={`${styles.singleCard_image}`}>
                             {post.media !== "" ? (
-                              <img src={`${BASE_URL}/${post.media}`} alt="" />
+                              <img src={post.media} alt="post" />
                             ) : (
                               <></>
                             )}
