@@ -53,71 +53,70 @@ export default function Dashboard() {
     return (
       <UserLayout>
         <DashboardLayout>
-          <div className="flex justify-center">
-            <div className="flex flex-col gap-4 w-full max-w-xl">
-              <div className={styles.createPostContainer}>
-                <img
-                  className={styles.userProfile}
-                  src={authState.user.userId.profilePicture}
-                  alt=""
-                />
+          <div className="flex justify-center flex-col bg-amber-50 gap-5">
+            <div className="flex justify-center items-center">
+                <div className="bg-white shadow-xl rounded-lg w-full flex h-fit items-center p-5 justify-center gap-6">
+                  <img
+                    className="rounded-full size-15  "
+                    src={authState.user.userId.profilePicture}
+                    alt=""
+                  />
+                  <textarea
+                    onChange={(e) => setPostContent(e.target.value)}
+                    value={postContent}
+                    placeholder={"What's in your mind?"}
+                    className={styles.textareaOfFeed}
+                    name="text"
+                    id=""
+                  ></textarea>
+                  <label htmlFor="fileUpload">
+                    <div className={styles.fab}>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="size-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 4.5v15m7.5-7.5h-15"
+                        />
+                      </svg>
+                    </div>
+                  </label>
+                  <input
+                    onChange={(e) => setFileContent(e.target.files[0])}
+                    type="file"
+                    hidden
+                    id="fileUpload"
+                  />
+                  {postContent.length > 0 && (
+                    <div onClick={handleUpload} className={styles.uploadButton}>
+                      Post
+                    </div>
+                  )}
+                </div>
+          </div>
 
-                <textarea
-                  onChange={(e) => setPostContent(e.target.value)}
-                  value={postContent}
-                  placeholder={"What's in your mind?"}
-                  className={styles.textareaOfFeed}
-                  name="text"
-                  id=""
-                ></textarea>
-
-                <label htmlFor="fileUpload">
-                  <div className={styles.fab}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="size-6"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 4.5v15m7.5-7.5h-15"
-                      />
-                    </svg>
-                  </div>
-                </label>
-                <input
-                  onChange={(e) => setFileContent(e.target.files[0])}
-                  type="file"
-                  hidden
-                  id="fileUpload"
-                />
-
-                {postContent.length > 0 && (
-                  <div onClick={handleUpload} className={styles.uploadButton}>
-                    Post
-                  </div>
-                )}
-              </div>
-
-              <div className="postsContainer">
+            <div className="bg-amber-50">
+              <div className="bg-white">
                 {postState.posts.map((post) => {
                   if (!post.userId) return null;
                   return (
                     <div key={post._id} className={styles.singleCard}>
                       <div className={styles.singleCard_profileContainer}>
                         <img
-                          className={styles.userProfile}
+                          className="rounded-full size-15"
                           src={post.userId.profilePicture}
                           alt=""
                         />
                         <div>
                           <div
                             style={{
-                              display: "",
+                              display: "flex",
                               gap: "1.2rem",
                               justifyContent: "space-between",
                             }}
