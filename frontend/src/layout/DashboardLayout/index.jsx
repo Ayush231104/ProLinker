@@ -20,12 +20,12 @@ export default function DashboardLayout({children}) {
 
     const router = useRouter();
   return (
-    <div className="flex items-center justify-center bg-amber-50">
+    <div className="flex items-center justify-center bg-gray-200">
       <div className="container">
 
-        <div className="flex lg:mx-15">
+        <div className="flex lg:mx-45">
 
-            <div className="hidden sm:flex flex-1/5 flex-col gap-5 h-fit rounded-md items-start border-r border-red-50 bg-white p-[10px] my-[10px] ml-[10px] shadow-lg">
+            <div className="hidden sm:flex flex-3/10 flex-col gap-5 h-fit rounded-md items-start border-r border-red-50 bg-white p-[10px] mt-3 shadow-lg">
 
                 <div onClick={()=>{
                     router.push('/dashboard')
@@ -60,11 +60,11 @@ export default function DashboardLayout({children}) {
 
             </div>
 
-            <div className={`${styles.homeContainer_feedContainer} flex-3/5`}>
+            <div className="bg-gray-200 rounded-lg h-fit my-3 lg:mx-4 flex-3/5">
                 {children}
             </div>
 
-            <div className="hidden sm:flex sm:flex-1/5 flex-col py-[5px] pl-[20px] pr-[5px] my-2.5 ml-0 mr-2.5 bg-white h-[88vh] rounded-md border-l border-red-50 shadow-lg">
+            <div className="hidden sm:flex sm:flex-3/10 flex-col py-[5px] pl-[20px] pr-[5px] mt-3 ml-0 mr-2.5 bg-white h-[88vh] rounded-md border-l border-red-50 shadow-lg">
                 <h2 className="font-semibold text-xl ">Top Profiles</h2>
                 {authState.all_profiles_fetched && authState.all_users
                     .map((profile) => {
