@@ -1,7 +1,6 @@
 import User from "../models/user.model.js";
 import Post from "../models/posts.model.js";
 import Comment from "../models/comments.model.js";
-import bcrypt from "bcrypt";
 
 export const activeCheck = async (req, res) => {
   return res.status(200).json({ message: "Running" });

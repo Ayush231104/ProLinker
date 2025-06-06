@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   createPost,
@@ -53,7 +53,7 @@ export default function Dashboard() {
     return (
       <UserLayout>
         <DashboardLayout>
-          <div className="flex justify-center flex-col bg-amber-50 gap-1">
+          <div className="flex justify-center flex-col bg-gray-200 gap-1">
             <div className="flex justify-center items-center">
                 <div className= " relative bg-white shadow-xl rounded-lg w-full flex h-fit items-center p-5 justify-center gap-6">
                   <img
@@ -102,28 +102,34 @@ export default function Dashboard() {
           </div>
 
           <div className="flex items-center">
-                  <div className="  h-[0.1rem] flex-11/12 bg-gray-400"></div>
-                  <p className=" font-100 text-sm flex-1/12">Top feed</p>
+                  <div className="  h-[0.1rem] flex-9/10 bg-gray-400"></div>
+                  <p className=" font-100 text-sm flex-1/10">Top feed</p>
           </div>
 
-            <div className="">
-              <div className="flex flex-col bg-amber-50 rounded-lg gap-3">
+            <div className="bg-gray-200">
+              <div className="flex flex-col rounded-lg gap-3">
                 {postState.posts.map((post) => {
                   if (!post.userId) return null;
                   return (
                     <div key={post._id} className="bg-white rounded-lg shadow-xl">
-                      <div className={styles.singleCard_profileContainer}>
-                        <img
-                          className="rounded-full size-15"
-                          src={post.userId.profilePicture}
-                          alt=""
-                        />
-                        <div>
-                          <div className="flex gap-0.5 justify-between">
+                      <div className={` flex flex-col ${styles.singleCard_profileContainer}`}>
+                        <div className="flex relative gap-5 w-full px-5 py-3">
+                          <img
+                            className="rounded-full size-15"
+                            src={post.userId.profilePicture}
+                            alt=""
+                          />
+                        
+                          <div className="flex flex-col ">
                             <p style={{ fontWeight: "bold" }}>
                               {post.userId.name}
                             </p>
-                            {post.userId._id === authState.user.userId._id && (
+                            
+                            <p style={{ color: "gray" }}>
+                              @{post.userId.username}
+                            </p>
+                          </div>
+                          {post.userId._id === authState.user.userId._id && (
                               <div
                                 onClick={async () => {
                                   await dispatch(deletePost(post._id));
@@ -131,6 +137,7 @@ export default function Dashboard() {
                                 }}
                                 style={{ cursor: "pointer" }}
                               >
+                                
                                 <svg
                                   style={{ height: "1.3em", color: "red" }}
                                   xmlns="http://www.w3.org/2000/svg"
@@ -138,7 +145,7 @@ export default function Dashboard() {
                                   viewBox="0 0 24 24"
                                   strokeWidth={1.5}
                                   stroke="currentColor"
-                                  className="size-6"
+                                  className=" absolute right-5 size-6"
                                 >
                                   <path
                                     strokeLinecap="round"
@@ -148,11 +155,10 @@ export default function Dashboard() {
                                 </svg>
                               </div>
                             )}
-                          </div>
-                          <p style={{ color: "gray" }}>
-                            @{post.userId.username}
-                          </p>
-                          <p style={{ paddingTop: "0.3rem" }}>
+                        </div>
+
+                        <div>
+                          <p className="px-4 pb-1">
                             {showFull
                               ? post.body
                               : `${post.body.slice(0, 100)}${
@@ -173,24 +179,25 @@ export default function Dashboard() {
                               </button>
                             )}
                           </p>
-
-                          <div className={`${styles.singleCard_image}`}>
-                            {post.media !== "" ? (
-                              <img src={post.media} alt="post" />
-                            ) : (
-                              <></>
-                            )}
-                          </div>
-
-                          <div className={styles.optionsContainer}>
+                        </div>
+                        <div className={`${styles.singleCard_image}`}>
+                          {post.media !== "" ? (
+                            <img src={post.media} alt="postmedia" />
+                          ) : (
+                            <></>
+                          )}
+                        </div>
+                    
+                          <div className="">
+                          <div className="flex justify-between py-2 items-center px-15">
                             <div
                               onClick={async () => {
-                                dispatch(
+                                await dispatch(
                                   incrementPostLike({ post_id: post._id })
                                 );
                                 dispatch(getAllPosts());
                               }}
-                              className={styles.singleOption_optionsContainer}
+                              className={`${styles.singleOption_optionsContainer} `}
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -206,9 +213,9 @@ export default function Dashboard() {
                                   d="M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z"
                                 />
                               </svg>
-                              <p>{post.likes}</p>
+                              <p className="pl-2">{post.likes}</p>
                             </div>
-
+  
                             <div
                               onClick={() => {
                                 dispatch(getAllComments({ post_id: post._id }));
@@ -230,13 +237,13 @@ export default function Dashboard() {
                                 />
                               </svg>
                             </div>
-
+  
                             <div
                               onClick={() => {
                                 const text = encodeURIComponent(post.body);
                                 const url =
                                   encodeURIComponent("apanacolage.in");
-
+  
                                 const twitterUrl = `https://twitter.com/AyushShadow?${text}&url=${url}`;
                                 window.open(twitterUrl, "_blank");
                               }}
@@ -258,7 +265,7 @@ export default function Dashboard() {
                               </svg>
                             </div>
                           </div>
-                        </div>
+</div>
                       </div>
                     </div>
                   );

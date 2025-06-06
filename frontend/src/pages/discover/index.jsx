@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import UserLayout from '../../layout/UserLayout'
 import DashboardLayout from '../../layout/DashboardLayout'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllUsers } from '../../config/redux/action/authAction';
 import styles from "./styles.module.css"
-import { BASE_URL } from '../../config';
+// import { BASE_URL } from '../../config';
 import { useRouter } from 'next/router';
 
 export default function DiscoverPage() {
