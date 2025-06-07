@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { BASE_URL, clientServer } from "../../config";
 import DashboardLayout from "../../layout/DashboardLayout";
 import UserLayout from "../../layout/UserLayout";
@@ -14,7 +13,6 @@ import {
 import { getAllPosts } from "../../config/redux/action/postAction";
 
 export default function ViewProfilePage({ userProfile }) {
-  // const searchParams = useSearchParams();
 
   const router = useRouter();
   const postReducer = useSelector((state) => state.postReducer);
@@ -122,13 +120,15 @@ export default function ViewProfilePage({ userProfile }) {
   return (
     <UserLayout>
       <DashboardLayout>
-        <div className="p-5.25 bg-red-50 flex flex-col">
-          <div className={styles.backDropContainer}>
-            <img
-              className={styles.backDrop}
-              src={`${BASE_URL}/${userProfile.userId.profilePicture}`}
-              alt="backdrop"
-            />
+        <div className="p-5.25 bg-red-50 flex flex-col gap-3">
+          <div className="">
+            <div className={styles.backDropContainer}>
+              <img
+                className={styles.backDrop}
+                src={userProfile.userId.profilePicture}
+                alt="backdrop"
+              />
+            </div>
           </div>
 
           <div className="pt-20">
@@ -206,32 +206,10 @@ export default function ViewProfilePage({ userProfile }) {
                     </svg>
                   </div>
                 </div>
-
                 <div className="ml-2 mb-2">
                   <p className="font-medium">{userProfile.bio}</p>
                 </div>
               </div>
-            </div>
-            <div className="flex-1/5 ml-2 mb-2">
-              <h3 className="font-semibold mb-3">Recent Activity</h3>
-              {userPosts.map((post) => {
-                return (
-                  <div key={post._id} className={styles.postCard}>
-                    <div className={styles.card}>
-                      <div className={styles.card_profileContainer}>
-                        {post.media !== "" ? (
-                          <img src={`${BASE_URL}/${post.media}`} alt="post" />
-                        ) : (
-                          <div
-                            style={{ width: "3.4rem", height: "3.4rem" }}
-                          ></div>
-                        )}
-                      </div>
-                      <p>{post.body}</p>
-                    </div>
-                  </div>
-                );
-              })}
             </div>
           </div>
 
@@ -257,6 +235,28 @@ export default function ViewProfilePage({ userProfile }) {
                 );
               })}
             </div>
+          </div>
+
+          <div className="flex ml-2 mb-2">
+            <h3 className="font-semibold mb-3">Recent Activity</h3>
+            {userPosts.map((post) => {
+              return (
+                <div key={post._id} className={styles.postCard}>
+                  <div className={styles.card}>
+                    <div className={styles.card_profileContainer}>
+                      {post.media !== "" ? (
+                        <img src={post.media} alt="post" />
+                      ) : (
+                        <div
+                          style={{ width: "3.4rem", height: "3.4rem" }}
+                        ></div>
+                      )}
+                    </div>
+                    <p>{post.body}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </DashboardLayout>
