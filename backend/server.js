@@ -9,13 +9,26 @@ dotenv.config();
 
 const app = express();
 
-// app.use(
-//     cors({
-//         origin: ["http://localhost:3000/", process.env.CLIENT_URL],
-//         methods: ["GET", "POST", "PUT", "DELETE"],
-//     })
-// );
-app.use(cors());
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        "http://localhost:3000",
+        "https://pro-linker-lovat.vercel.app",
+      ];
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+// app.options("*", cors());
+// app.use(cors());
 app.use(express.json());
 app.use(express.static("uploads"));
 
@@ -24,10 +37,8 @@ app.use(userRoutes);
 
 const start = async () => {
   try {
-    const connectDB = await mongoose
-      .connect(process.env.MONGO_URI)
-      .then(() => console.log("MongoDB connected"))
-      .catch((err) => console.error("MongoDB connection error:", err));
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("MongoDB connected");
 
     app.listen(8080, () => {
       console.log("Server is running on port 8080");

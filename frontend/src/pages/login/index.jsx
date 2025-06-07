@@ -80,7 +80,7 @@ function LoginComponent() {
                 }}
                 className={styles.inputField} type="password" placeholder="Password"/>
 
-              <p style={{color: authState.isError ? "red" : "Green"}}>{authState.message.message || authState.message}</p>
+              <p style={{color: authState.isError ? "red" : "Green"}}>{authState.message?.message || authState.message}</p>
               <div onClick={() => {
                 if(userLoginMethod){
                   handleLogin();
