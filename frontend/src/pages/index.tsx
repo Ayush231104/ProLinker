@@ -19,7 +19,7 @@ export default function Home() {
             <p>A true social media platform, with stories — no bluffs!</p>
 
             <div onClick={() => {
-              localStorage.removeItem("token"); 
+              localStorage.removeItem("token");
               router.push("/login")
             }} className={styles.buttonJoin}>
               Join Now
@@ -27,7 +27,13 @@ export default function Home() {
           </div>
 
           <div className={styles.mainContainer_right}>
-            <Image width={800} height={600} src="/images/conn.png" alt="connect people" />
+            <Image
+              priority
+              width={800}
+              height={600}
+              src="/images/conn.png"
+              alt="connect people"
+            />
           </div>
 
         </div>

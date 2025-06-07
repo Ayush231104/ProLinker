@@ -24,8 +24,8 @@ export default function DiscoverPage() {
   return (
     <UserLayout>
         <DashboardLayout>
-            <div className='bg-amber-50 '>
-            <h1 className='bg-white mb-3 font-bold p-5 text-2xl'>Discover</h1>
+            <div className='bg-gray-200 '>
+            <h1 className='bg-white mb-3 rounded-lg font-bold p-5 text-2xl'>Discover</h1>
 
             <div className=" max-w-full flex items-center flex-col gap-3">
 
@@ -35,13 +35,13 @@ export default function DiscoverPage() {
                         <div onClick={()=>{
                             router.push(`/view_profile/${user.userId.username}`)
                         }} key={user._id} className="bg-white rounded-lg flex w-full items-center justify-start p-5 gap-5">
-                            <img className={` rounded-full size-15 lg:w-full ${styles.userCard_image}`} src={user.userId.profilePicture} alt="Profile" />
+                            <img className="rounded-full size-15" src={user.userId.profilePicture} alt="Profile" />
                             <div>
-                                <h2>{user.userId.name}</h2>
-                                <p>{user.userId.username}</p>
+                                <h2 className='font-bold'>{user.userId.name}</h2>
+                                <p>@{user.userId.username}</p>
                             </div>
                             <div>
-                                <h1 className='font-bold'>Bio</h1>
+                                <h1 className='font-semibold'>Bio</h1>
                                 <h2>{user.bio}</h2>
                             </div>
                         </div>

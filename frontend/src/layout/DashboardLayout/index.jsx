@@ -40,11 +40,23 @@ export default function DashboardLayout({children}) {
 
                 <h1 className="font-semibold text-2xl pt-8">{authState?.user?.userId?.name}</h1>
                 <h1 className="text-gray-500">@{authState?.user?.userId?.username}</h1>
+                <h1 className="font-semibold pt-2">Experience</h1>
                 {
                     userProfile?.pastWork?.map((work, index) => {
                         return (
                         <div key={index} className="font-light text-sm">
                             <p>{work.company} - {work.position}</p>
+                        </div>
+                        )
+                    })
+                }
+                <h1 className="font-semibold pt-2">Education</h1>
+                {
+                    userProfile?.education?.map((educ, index) => {
+                        return (
+                        <div key={index} className="font-light text-sm">
+                            <p className="">{educ.school}</p>
+                            <p className="">{educ.degree}</p>
                         </div>
                         )
                     })

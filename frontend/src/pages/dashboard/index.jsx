@@ -115,13 +115,20 @@ export default function Dashboard() {
                       <div className={` flex flex-col ${styles.singleCard_profileContainer}`}>
                         <div className="flex relative gap-5 w-full px-5 py-3">
                           <img
-                            className="rounded-full size-15"
+                            onClick={()=>{
+                              router.push(`/view_profile/${post.userId.username}`)
+
+                            }}
+                            className="rounded-full size-15 cursor-pointer"
                             src={post.userId.profilePicture}
                             alt=""
                           />
                         
-                          <div className="flex flex-col ">
-                            <p style={{ fontWeight: "bold" }}>
+                          <div className="flex flex-col">
+                            <p onClick={()=>{
+                              router.push(`/view_profile/${post.userId.username}`)
+
+                            }} className="font-bold cursor-pointer">
                               {post.userId.name}
                             </p>
                             

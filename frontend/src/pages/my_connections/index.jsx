@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import UserLayout from '../../layout/UserLayout'
 import DashboardLayout from '../../layout/DashboardLayout'
 import styles from './styles.module.css'
