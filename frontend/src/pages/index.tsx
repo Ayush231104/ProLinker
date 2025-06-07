@@ -19,6 +19,7 @@ export default function Home() {
             <p>A true social media platform, with stories — no bluffs!</p>
 
             <div onClick={() => {
+              localStorage.removeItem("token"); 
               router.push("/login")
             }} className={styles.buttonJoin}>
               Join Now
