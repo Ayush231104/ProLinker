@@ -34,7 +34,6 @@ export default function MyConnectionsPage() {
               <div className="flex flex-col gap-2">
                 <h3 className='bg-white font-semibold text-2xl rounded-lg p-3'>My Connection</h3>
                 {authState.connectionRequest.length == 0 && <h1 style={{padding:"5px"}}>No Connection Request Panding</h1>}
-                {console.log(authState.connectionRequest.length)}
                 {
                   authState.connectionRequest.length != 0
                   &&
