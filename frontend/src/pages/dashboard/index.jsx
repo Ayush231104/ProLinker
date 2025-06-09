@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   createPost,
+  deleteComment,
   deletePost,
   getAllComments,
   getAllPosts,
@@ -17,7 +18,10 @@ import UserLayout from "../../layout/UserLayout";
 import DashboardLayout from "../../layout/DashboardLayout";
 import styles from "./styles.module.css";
 import { BASE_URL } from "../../config";
-import { resetPostId } from "../../config/redux/reducer/postReducer";
+import {
+  resetPostId,
+  setSelectedPostId,
+} from "../../config/redux/reducer/postReducer";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -39,14 +43,14 @@ export default function Dashboard() {
 
   const [postContent, setPostContent] = useState("");
   const [fileContent, setFileContent] = useState();
-  const [showFull, setShowFull] = useState(false);
+  const [expandedPosts, setExpandedPosts] = useState({});
   const [commentText, setCommentText] = useState("");
 
   const handleUpload = async () => {
-        await dispatch(createPost({ file: fileContent, body: postContent }));
-        setPostContent("");
-        setFileContent(null);
-        dispatch(getAllPosts());
+    await dispatch(createPost({ file: fileContent, body: postContent }));
+    setPostContent("");
+    setFileContent(null);
+    dispatch(getAllPosts());
   };
 
   if (authState.user) {
@@ -55,125 +59,142 @@ export default function Dashboard() {
         <DashboardLayout>
           <div className="flex justify-center flex-col bg-gray-200 gap-1">
             <div className="flex justify-center items-center">
-                <div className= " relative bg-white shadow-xl rounded-lg w-full flex h-fit items-center p-5 justify-center gap-6">
-                  <img
-                    className="rounded-full size-13"
-                    src={authState.user.userId.profilePicture}
-                    alt=""
-                  />
-                  <textarea
-                    onChange={(e) => setPostContent(e.target.value)}
-                    value={postContent}
-                    placeholder={"What's in your mind?"}
-                    className={styles.textareaOfFeed}
-                    name="text"
-                    id=""
-                  ></textarea>
-                  <label htmlFor="fileUpload">
-                    <div className={styles.fab}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="size-6"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 4.5v15m7.5-7.5h-15"
-                        />
-                      </svg>
-                    </div>
-                  </label>
-                  <input
-                    onChange={(e) => setFileContent(e.target.files[0])}
-                    type="file"
-                    hidden
-                    id="fileUpload"
-                  />
-                 {postContent.length > 0 && (
-                    <div onClick={handleUpload} className={`${styles.uploadButton} absolute right-0 bg-sky-500 text-blue-50 rounded-lg px-6 py-1 `}>
-                      Post
-                    </div>
-                  )}
-                </div>
-          </div>
+              <div className=" relative bg-white shadow-xl rounded-lg w-full flex h-fit items-center p-5 justify-center gap-6">
+                <img
+                  className="rounded-full size-13"
+                  src={authState.user.userId.profilePicture}
+                  alt=""
+                />
+                <textarea
+                  onChange={(e) => setPostContent(e.target.value)}
+                  value={postContent}
+                  placeholder={"What's in your mind?"}
+                  className={styles.textareaOfFeed}
+                  name="text"
+                  id=""
+                ></textarea>
+                <label htmlFor="fileUpload">
+                  <div className={styles.fab}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="size-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 4.5v15m7.5-7.5h-15"
+                      />
+                    </svg>
+                  </div>
+                </label>
+                <input
+                  onChange={(e) => setFileContent(e.target.files[0])}
+                  type="file"
+                  hidden
+                  id="fileUpload"
+                />
+                {postContent.length > 0 && (
+                  <div
+                    onClick={handleUpload}
+                    className={`${styles.uploadButton} absolute right-0 bg-sky-500 text-blue-50 rounded-lg px-6 py-1 `}
+                  >
+                    Post
+                  </div>
+                )}
+              </div>
+            </div>
 
-          <div className="flex items-center">
-                  <div className="  h-[0.1rem] flex-9/10 bg-gray-400"></div>
-                  <p className=" font-100 text-sm flex-1/10">Top feed</p>
-          </div>
+            <div className="flex items-center">
+              <div className="  h-[0.1rem] flex-9/10 bg-gray-400"></div>
+              <p className=" font-100 text-sm flex-1/10">Top feed</p>
+            </div>
 
             <div className="bg-gray-200">
               <div className="flex flex-col rounded-lg gap-3">
                 {postState.posts.map((post) => {
                   if (!post.userId) return null;
                   return (
-                    <div key={post._id} className="bg-white rounded-lg shadow-xl">
-                      <div className={` flex flex-col ${styles.singleCard_profileContainer}`}>
+                    <div
+                      key={post._id}
+                      className="bg-white rounded-lg shadow-xl"
+                    >
+                      <div
+                        className={` flex flex-col ${styles.singleCard_profileContainer}`}
+                      >
                         <div className="flex relative gap-5 w-full px-5 py-3">
                           <img
-                            onClick={()=>{
-                              router.push(`/view_profile/${post.userId.username}`)
-
+                            onClick={() => {
+                              router.push(
+                                `/view_profile/${post.userId.username}`
+                              );
                             }}
                             className="rounded-full size-15 cursor-pointer"
                             src={post.userId.profilePicture}
                             alt=""
                           />
-                        
-                          <div className="flex flex-col">
-                            <p onClick={()=>{
-                              router.push(`/view_profile/${post.userId.username}`)
 
-                            }} className="font-bold cursor-pointer">
+                          <div className="flex flex-col">
+                            <p
+                              onClick={() => {
+                                router.push(
+                                  `/view_profile/${post.userId.username}`
+                                );
+                              }}
+                              className="font-bold cursor-pointer"
+                            >
                               {post.userId.name}
                             </p>
-                            
+
                             <p style={{ color: "gray" }}>
                               @{post.userId.username}
                             </p>
                           </div>
                           {post.userId._id === authState.user.userId._id && (
-                              <div
-                                onClick={async () => {
-                                  await dispatch(deletePost(post._id));
-                                  await dispatch(getAllPosts());
-                                }}
-                                style={{ cursor: "pointer" }}
+                            <div
+                              onClick={async () => {
+                                await dispatch(deletePost(post._id));
+                                await dispatch(getAllPosts());
+                              }}
+                              style={{ cursor: "pointer" }}
+                            >
+                              <svg
+                                style={{ height: "1.3em", color: "red" }}
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={1.5}
+                                stroke="currentColor"
+                                className=" absolute right-5 size-6"
                               >
-                                
-                                <svg
-                                  style={{ height: "1.3em", color: "red" }}
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  strokeWidth={1.5}
-                                  stroke="currentColor"
-                                  className=" absolute right-5 size-6"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                                  />
-                                </svg>
-                              </div>
-                            )}
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                                />
+                              </svg>
+                            </div>
+                          )}
                         </div>
 
                         <div>
                           <p className="px-4 pb-1">
-                            {showFull
+                            {expandedPosts[post._id]
                               ? post.body
                               : `${post.body.slice(0, 100)}${
                                   post.body.length > 100 ? "..." : ""
                                 }`}
                             {post.body.length > 100 && (
                               <button
-                                onClick={() => setShowFull(!showFull)}
+                                onClick={() =>
+                                  setExpandedPosts((prev) => ({
+                                    ...prev,
+                                    [post._id]: !prev[post._id],
+                                  }))
+                                }
                                 style={{
                                   marginLeft: "0.5rem",
                                   color: "blue",
@@ -182,7 +203,9 @@ export default function Dashboard() {
                                   cursor: "pointer",
                                 }}
                               >
-                                {showFull ? "see less" : "see more..."}
+                                {expandedPosts[post._id]
+                                  ? "see less"
+                                  : "see more..."}
                               </button>
                             )}
                           </p>
@@ -194,8 +217,8 @@ export default function Dashboard() {
                             <></>
                           )}
                         </div>
-                    
-                          <div className="">
+
+                        <div className="">
                           <div className="flex justify-between py-2 items-center px-15">
                             <div
                               onClick={async () => {
@@ -222,9 +245,11 @@ export default function Dashboard() {
                               </svg>
                               <p className="pl-2">{post.likes}</p>
                             </div>
-  
+
                             <div
                               onClick={() => {
+                                // dispatch(resetPostId());
+                                dispatch(setSelectedPostId(post._id));
                                 dispatch(getAllComments({ post_id: post._id }));
                               }}
                               className={styles.singleOption_optionsContainer}
@@ -244,13 +269,13 @@ export default function Dashboard() {
                                 />
                               </svg>
                             </div>
-  
+
                             <div
                               onClick={() => {
                                 const text = encodeURIComponent(post.body);
                                 const url =
                                   encodeURIComponent("apanacolage.in");
-  
+
                                 const twitterUrl = `https://twitter.com/AyushShadow?${text}&url=${url}`;
                                 window.open(twitterUrl, "_blank");
                               }}
@@ -272,7 +297,7 @@ export default function Dashboard() {
                               </svg>
                             </div>
                           </div>
-</div>
+                        </div>
                       </div>
                     </div>
                   );
@@ -280,74 +305,109 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
-          {postState.postId !== "" && (
+          {postState.selectedPostId !== "" && (
             <div
               onClick={() => {
                 dispatch(resetPostId());
               }}
-              className={styles.commentsContainer}
+              className={`fixed inset-0 z-50 flex items-center justify-center bg-black/60`}
             >
               <div
                 onClick={(e) => {
                   e.stopPropagation();
                 }}
-                className={styles.allCommentsContainer}
+                className={`relative bg-white rounded-lg w-[40vw] min-h-[40svh] max-w-[1120px] h-[80vh] p-6 flex flex-col ${styles.allCommentsContainer}`}
               >
-                {postState.comments.length === 0 && (
-                  <h2 style={{ color: "black" }}>No Comments</h2>
+                <h2 className="text-lg font-bold mb-4">Comments</h2>
+                {(!postState.commentsByPostId[postState.selectedPostId] ||
+                  postState.commentsByPostId[postState.selectedPostId]
+                    .length === 0) && (
+                  <h2 className="text-gray-500 py-8 text-center">
+                    No Comments
+                  </h2>
                 )}
 
-                {postState.comments.length !== 0 && (
-                  <div>
-                    {postState.comments.map((comment, index) => {
-                      return (
-                        <div className={styles.singleComment} key={comment._id}>
-                          <div
-                            className={styles.singleComment_profileContainer}
-                          >
-                            <img
-                              src={`${BASE_URL}/${comment.userId.profilePicture}`}
-                              alt=""
-                            />
-                            <div>
-                              <p
-                                style={{
-                                  fontWeight: "bold",
-                                  fontSize: "1.2rem",
-                                }}
-                              >
-                                {comment.userId.name}
-                              </p>
-                              <p>@{comment.userId.username}</p>
+                <div className="flex-1 overflow-y-auto space-y-4 pr-2 pb-20">
+                  {postState.commentsByPostId[postState.selectedPostId]
+                    ?.length > 0 && (
+                    <div className="flex flex-col gap-2">
+                      {postState.commentsByPostId[postState.selectedPostId].map(
+                        (comment) => {
+                          let user = comment.userId;
+                          // If userId is just an ID, find the user in allUsers
+                          if (typeof user === "string" && authState.allUsers) {
+                            user = authState.allUsers.find(
+                              (u) => u._id === user
+                            );
+                          }
+                          return (
+                            <div
+                              className="shadow-lg rounded-lg flex flex-col h-fit gap-3"
+                              key={comment._id}
+                            >
+                              <div className="flex items-start gap-3 bg-gray-50 p-2 rounded-lg">
+                                <img
+                                  className="rounded-full size-10 object-cover"
+                                  src={comment.userId.profilePicture}
+                                  alt=""
+                                />
+                                <div>
+                                  <p className="font-semibold text-sm">
+                                    {comment.userId.name}
+                                  </p>
+                                  <p className="text-gray-600 text-xs">
+                                    @{comment.userId.username}
+                                  </p>
+                                  <div>
+                                    <p className="mt-1 text-sm">
+                                      {comment.body}
+                                    </p>
+                                  </div>
+                                  {comment.userId._id ===
+                                    authState.user.userId._id && (
+                                    <button
+                                      onClick={() =>{
+                                        dispatch(deleteComment({ commentId: comment._id }))
+                                        dispatch(getAllComments(post._id))
+                                      }}
+                                      className="text-red-500 text-xs"
+                                    >
+                                      Delete
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                          <p>{comment.body}</p>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
+                          );
+                        }
+                      )}
+                    </div>
+                  )}
+                </div>
 
                 <div className={styles.postCommentContainer}>
                   <input
-                    type=""
+                    type="text"
                     value={commentText}
+                    className="flex-1 px-6 py-3 rounded-lg bg-gray-200 focus:border focus:border-gray-400 outline-none"
                     onChange={(e) => setCommentText(e.target.value)}
                     placeholder="Comment"
                   />
                   <div
                     onClick={async () => {
+                      if (commentText.trim() === "") return;
+                      await dispatch(
+                        getAllComments({ post_id: postState.selectedPostId })
+                      );
+                      setCommentText("");
                       await dispatch(
                         postComment({
-                          post_id: postState.postId,
+                          post_id: postState.selectedPostId,
                           body: commentText,
                         })
                       );
-                      await dispatch(
-                        getAllComments({ post_id: postState.postId })
-                      );
                     }}
-                    className={styles.postCommentContainer_commentBtn}
+                    className="px-5 py-3 bg-gray-800 text-white rounded-lg font-semibold hover:bg-gray-900 transition"
                   >
                     <p>Comment</p>
                   </div>

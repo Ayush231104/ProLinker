@@ -1,5 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getAboutUser, getAllUsers, getConnectionsRequest, getMyConnectionRequests, loginUser, registerUser } from "../../action/authAction";
+import {
+  downloadResume,
+  getAboutUser,
+  getAllUsers,
+  getConnectionsRequest,
+  getMyConnectionRequests,
+  loginUser,
+  registerUser,
+} from "../../action/authAction";
 
 const initialState = {
   user: undefined,
@@ -13,7 +21,7 @@ const initialState = {
   connections: [],
   connectionRequest: [],
   all_users: [],
-  all_profiles_fetched: false
+  all_profiles_fetched: false,
 };
 
 const authSlice = createSlice({
@@ -25,14 +33,14 @@ const authSlice = createSlice({
       state.message = "hello";
     },
     emptyMessage: (state) => {
-      state.message = ""
+      state.message = "";
     },
     setTokenIsThere: (state) => {
       state.isTokenThere = true;
     },
     setTokenIsNotThere: (state) => {
       state.isTokenThere = false;
-    }
+    },
   },
 
   extraReducers: (bulder) => {
@@ -63,8 +71,8 @@ const authSlice = createSlice({
         state.isSuccess = true;
         state.loggedIn = true;
         state.message = {
-          message:"Registration is Successfull, Please Login"
-        }
+          message: "Registration is Successfull, Please Login",
+        };
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -77,27 +85,37 @@ const authSlice = createSlice({
         state.profileFetched = true;
         state.user = action.payload.userProfile;
       })
-      .addCase(getAllUsers.fulfilled, ( state, action) => {
+      .addCase(getAllUsers.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isError = false;
         state.all_profiles_fetched = true;
         state.all_users = action.payload.profiles;
       })
       .addCase(getConnectionsRequest.fulfilled, (state, action) => {
-        state.connections = action.payload
+        state.connections = action.payload;
       })
       .addCase(getConnectionsRequest.rejected, (state, action) => {
-        state.message = action.payload
+        state.message = action.payload;
       })
       .addCase(getMyConnectionRequests.fulfilled, (state, action) => {
-        state.connectionRequest = action.payload
+        state.connectionRequest = action.payload;
       })
       .addCase(getMyConnectionRequests.rejected, (state, action) => {
-        state.message = action.payload
+        state.message = action.payload;
       })
+      .addCase(downloadResume.pending, (state) => {
+        state.resumeDownloadStatus = "loading";
+      })
+      .addCase(downloadResume.fulfilled, (state) => {
+        state.resumeDownloadStatus = "succeeded";
+      })
+      .addCase(downloadResume.rejected, (state) => {
+        state.resumeDownloadStatus = "failed";
+      });
   },
 });
 
-export const {reset, emptyMessage, setTokenIsThere, setTokenIsNotThere } = authSlice.actions;
+export const { reset, emptyMessage, setTokenIsThere, setTokenIsNotThere } =
+  authSlice.actions;
 
 export default authSlice.reducer;

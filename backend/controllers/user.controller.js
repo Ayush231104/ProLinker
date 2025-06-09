@@ -3,41 +3,122 @@ import Profile from "../models/profile.model.js";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 import PDFDocument from "pdfkit";
-import fs from "fs";
+import getStream from "get-stream";
+// import fs from "fs";
+// import path from "path";
+import axios from "axios"
 import ConnectionRequest from "../models/connections.model.js";
 
+// const convertUserDataTOPDF = async (userData) => {
+//   const doc = new PDFDocument();
+//   const buffers = [];
+
+//   const outputPath = crypto.randomBytes(32).toString("hex") + ".pdf";
+//   const stream = fs.createWriteStream("linkPost/" + outputPath);
+
+//   doc.on("data", buffers.push.bind(buffers));
+//   doc.on("end", () => {});
+
+//   doc.pipe(stream);
+
+//   try {
+//     doc.image(userData.userId.profilePicture, {
+//       align: "center",
+//       width: 100,
+//     });
+//   } catch (err) {
+//     doc.text("[Profile Picture not found]");
+//   }
+//   doc.fontSize(14).text(`Name: ${userData.userId.name}`);
+//   doc.fontSize(14).text(`Username: ${userData.userId.username}`);
+//   doc.fontSize(14).text(`Email: ${userData.userId.email}`);
+//   doc.fontSize(14).text(`Bio: ${userData.bio}`);
+//   doc.fontSize(14).text(`Current Position: ${userData.currentPost}`);
+
+//   doc.fontSize(14).text("Past Work: ");
+//   userData.pastWork.forEach((work, index) => {
+//     doc.fontSize(14).text(`Company Name: ${work.company}`);
+//     doc.fontSize(14).text(`Position: ${work.position}`);
+//     doc.fontSize(14).text(`Years : ${work.years}`);
+//   });
+
+//   doc.end();
+
+//   // return outputPath;
+//   const pdfBuffer = await getStream.buffer(doc);
+//   return pdfBuffer;
+// };
 const convertUserDataTOPDF = async (userData) => {
-  const doc = new PDFDocument();
+  const doc = new PDFDocument({ margin: 50 });
+  const buffers = [];
 
-  const outputPath = crypto.randomBytes(32).toString("hex") + ".pdf";
-  const stream = fs.createWriteStream("uploads/" + outputPath);
+  // Collect stream in buffer
+  doc.on("data", buffers.push.bind(buffers));
 
-  doc.pipe(stream);
-
+  // HEADER SECTION WITH IMAGE
   try {
-    doc.image(`uploads/${userData.userId.profilePicture}`, {
-      align: "center",
-      width: 100,
-    });
+    if (userData.userId.profilePicture) {
+      const imageUrl = userData.userId.profilePicture;
+      const response = await axios({ url: imageUrl, responseType: "arraybuffer" });
+      const imageBuffer = Buffer.from(response.data, "binary");
+      doc.image(imageBuffer, doc.page.width - 150, 30, { width: 80, height: 80 });
+    }
   } catch (err) {
-    doc.text("[]Profile Picture not found");
+    doc.fontSize(10).fillColor("red").text("[Profile Picture Not Available]", { align: "right" });
   }
-  doc.fontSize(14).text(`Name: ${userData.userId.name}`);
-  doc.fontSize(14).text(`Username: ${userData.userId.username}`);
-  doc.fontSize(14).text(`Email: ${userData.userId.email}`);
-  doc.fontSize(14).text(`Bio: ${userData.bio}`);
-  doc.fontSize(14).text(`Current Position: ${userData.currentPost}`);
 
-  doc.fontSize(14).text("Past Work: ");
-  userData.pastWork.forEach((work, index) => {
-    doc.fontSize(14).text(`Company Name: ${work.company}`);
-    doc.fontSize(14).text(`Position: ${work.position}`);
-    doc.fontSize(14).text(`Years : ${work.years}`);
-  });
+  // Name and Contact Info
+  doc
+    .fontSize(22)
+    .fillColor("#333")
+    .text(userData.userId.name, { continued: true })
+    .fillColor("gray")
+    .text(`(@${userData.userId.username})`);
 
+  doc.fontSize(12).fillColor("black").text(`Email: ${userData.userId.email}`);
+  doc.moveDown();
+
+  // Bio Section
+  doc
+    .fontSize(14)
+    .fillColor("#0056b3")
+    .text("Bio", { underline: true });
+  doc.fontSize(12).fillColor("black").text(userData.bio || "N/A");
+  doc.moveDown();
+
+  // Current Position
+  doc
+    .fontSize(14)
+    .fillColor("#0056b3")
+    .text("Current Position", { underline: true });
+  doc.fontSize(12).fillColor("black").text(userData.currentPost || "N/A");
+  doc.moveDown();
+
+  // Past Work Experience
+  doc
+    .fontSize(14)
+    .fillColor("#0056b3")
+    .text("Past Work Experience", { underline: true });
+
+  if (userData.pastWork && userData.pastWork.length > 0) {
+    doc.moveDown(0.5);
+    userData.pastWork.forEach((work) => {
+      doc
+        .fontSize(12)
+        .fillColor("black")
+        .text(`• ${work.position} at ${work.company} (${work.years})`);
+    });
+  } else {
+    doc.fontSize(12).fillColor("gray").text("No past work experience listed.");
+  }
+
+  // Finalize PDF
   doc.end();
-
-  return outputPath;
+  const pdfBuffer = await new Promise((resolve, reject) => {
+    doc.on("end", () => resolve(Buffer.concat(buffers)));
+    doc.on("error", reject);
+  });
+  return pdfBuffer;
 };
 
 export const register = async (req, res) => {
@@ -239,11 +320,19 @@ export const downloadProfile = async (req, res) => {
       "userId",
       "name email username profilePicture"
     );
+    if (!userProfile) {
+      return res.status(404).json({ message: "User profile not found" });
+    }
 
-    let outputPath = await convertUserDataTOPDF(userProfile);
+    const pdfBuffer = await convertUserDataTOPDF(userProfile);
+    res.set({
+      "Content-Type": "application/pdf",
+      "Content-Disposition": `attachment; filename="${userProfile.userId.username}_resume.pdf"`,
+    });
 
-    return res.json({ message: outputPath });
+    return res.send(pdfBuffer);
   } catch (err) {
+    console.error("Resume download error:", err);
     return res.status(500).json({ message: err.message });
   }
 };

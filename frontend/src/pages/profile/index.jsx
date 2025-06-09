@@ -20,7 +20,7 @@ export default function ProfilePage() {
   const router = useRouter();
   const authState = useSelector((state) => state.auth);
   const postReducer = useSelector((state) => state.postReducer);
-  const [showFull, setShowFull] = useState(false);
+  const [expandedPosts, setExpandedPosts] = useState({});
   const [userProfile, setUserProfile] = useState({});
   const [userPosts, setUserPosts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -128,8 +128,7 @@ export default function ProfilePage() {
   };
 
   const currentUserSchools =
-  authState.user?.education?.map((edu) => edu.school?.toLowerCase()) || [];
-
+    authState.user?.education?.map((edu) => edu.school?.toLowerCase()) || [];
 
   return (
     <UserLayout>
@@ -474,7 +473,8 @@ export default function ProfilePage() {
                                 @{post?.userId?.username}
                               </p>
                             </div>
-                            {post?.userId?._id === authState.user?.userId?._id && (
+                            {post?.userId?._id ===
+                              authState.user?.userId?._id && (
                               <div
                                 onClick={async () => {
                                   await dispatch(deletePost(post._id));
@@ -503,14 +503,19 @@ export default function ProfilePage() {
 
                           <div>
                             <p className="px-4 pb-1">
-                              {showFull
+                              {expandedPosts[post._id]
                                 ? post.body
                                 : `${post.body.slice(0, 100)}${
                                     post.body.length > 100 ? "..." : ""
                                   }`}
                               {post.body.length > 100 && (
                                 <button
-                                  onClick={() => setShowFull(!showFull)}
+                                  onClick={() =>
+                                    setExpandedPosts((prev) => ({
+                                      ...prev,
+                                      [post._id]: !prev[post._id],
+                                    }))
+                                  }
                                   style={{
                                     marginLeft: "0.5rem",
                                     color: "blue",
@@ -519,7 +524,9 @@ export default function ProfilePage() {
                                     cursor: "pointer",
                                   }}
                                 >
-                                  {showFull ? "see less" : "see more..."}
+                                  {expandedPosts[post._id]
+                                    ? "see less"
+                                    : "see more..."}
                                 </button>
                               )}
                             </p>
@@ -649,7 +656,8 @@ export default function ProfilePage() {
                     authState.all_users
                       .filter((user) => {
                         if (!user?.userId || !user.education) return false;
-                        if(user?.userId?._id == userProfile.userId?._id) return false;
+                        if (user?.userId?._id == userProfile.userId?._id)
+                          return false;
                         // Check if any of their schools match current user's schools
                         return user.education.some((edu) =>
                           currentUserSchools.includes(edu.school?.toLowerCase())
@@ -672,10 +680,11 @@ export default function ProfilePage() {
                               alt="Profile"
                             />
                             <div>
-                              <h2 className="font-semibold">{user?.userId?.name}</h2>
+                              <h2 className="font-semibold">
+                                {user?.userId?.name}
+                              </h2>
                               <p>{user?.userId?.username}</p>
                             </div>
-
                           </div>
                         );
                       })}

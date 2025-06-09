@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { clientServer } from "../../..";
 
+
 export const loginUser = createAsyncThunk(
   "user/login",
   async (user, thunkAPI) => {
@@ -149,3 +150,31 @@ export const acceptConnection = createAsyncThunk(
     }
   }
 )
+
+
+export const downloadResume = createAsyncThunk(
+  "user/downloadResume",
+  async (userId, thunkAPI) => {
+    try {
+      const response = await clientServer.get(`/user/download_resume?id=${userId}`, {
+        responseType: "blob", // Important for handling PDF data
+      });
+
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
+
+      // Trigger download
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${userId}_resume.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      return thunkAPI.fulfillWithValue("Downloaded successfully");
+    } catch (err) {
+      return thunkAPI.rejectWithValue("Download failed");
+    }
+  }
+);

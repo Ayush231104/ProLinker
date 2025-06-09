@@ -92,6 +92,10 @@ export const commentPost = async (req, res) => {
       return res.status(404).json({ message: "Post Not Found" });
     }
 
+    if (!token || !post_id || !commentBody) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
     const comment = new Comment({
       userId: user._id,
       postId: post_id,
@@ -100,7 +104,10 @@ export const commentPost = async (req, res) => {
 
     await comment.save();
 
-    return res.json({ message: "Comment Added" });
+    const populatedComment = await Comment.findById(comment._id)
+      .populate('userId', 'username name profilePicture');
+
+    return res.json(populatedComment);
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
@@ -117,7 +124,7 @@ export const get_comments_by_post = async (req, res) => {
 
     const comments = await Comment
     .find({postId: post_id})
-    .populate('userId', 'username name');
+    .populate('userId', 'username name profilePicture');
 
     return res.json( comments.reverse() );
   } catch (err) {
