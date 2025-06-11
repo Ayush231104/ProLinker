@@ -778,7 +778,7 @@ export default function ProfilePage() {
                           currentUserSchools.includes(edu.school?.toLowerCase())
                         );
                       })
-                      .map((user) => {
+                      .slice(0, 10).map((user) => {
                         return (
                           <div
                             onClick={() => {

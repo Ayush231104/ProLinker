@@ -7,7 +7,8 @@ import { getAllUsers } from "@/config/redux/action/authAction";
 
 export default function NavBarComponent() {
   const router = useRouter();
-
+  const isRootPath = router.pathname === "/" || router.pathname === "/login";
+  const isLogin = router.pathname === "/login";
   const dispatch = useDispatch();
 
   const authState = useSelector((state) => state.auth);
@@ -84,59 +85,62 @@ export default function NavBarComponent() {
                 </div>
               )}
             </div>
-            <div className="relative w-full sm:w-64" ref={inputRef}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="absolute left-3 top-1/2 -translate-y-1/2 size-6 text-gray-400 cursor-pointer"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"
-                  clipRule="evenodd"
+            {!isRootPath && (
+              <div className="relative w-full sm:w-64" ref={inputRef}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 size-6 text-gray-400 cursor-pointer"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search by name or username"
+                  className="w-[16rem] sm:w-full p-2 pl-12 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
-              </svg>
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search by name or username"
-                className="w-[16rem] sm:w-full p-2 pl-12 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-              />
-              {showSuggestions && results.length > 0 && (
-                <div className="absolute z-20 bg-white shadow-md w-full mt-1 rounded-md max-h-64 overflow-y-auto">
-                  {results.map((user) => (
-                    <div
-                      key={user._id}
-                      onClick={() => {
-                        router.push(`/view_profile/${user.userId.username}`);
-                        setQuery("");
-                        setResults([]);
-                        setShowSuggestions(false);
-                      }}
-                      className="flex items-center p-2 hover:bg-gray-100 cursor-pointer gap-2"
-                    >
-                      <img
-                        src={
-                          user?.userId?.profilePicture || "/default-avatar.png"
-                        }
-                        alt="profile"
-                        className="size-8 rounded-full object-cover"
-                      />
-                      <div>
-                        <p className="font-medium text-sm">
-                          {user?.userId?.name}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          @{user?.userId?.username}
-                        </p>
+                {showSuggestions && results.length > 0 && (
+                  <div className="absolute z-20 bg-white shadow-md w-full mt-1 rounded-md max-h-64 overflow-y-auto">
+                    {results.map((user) => (
+                      <div
+                        key={user._id}
+                        onClick={() => {
+                          router.push(`/view_profile/${user.userId.username}`);
+                          setQuery("");
+                          setResults([]);
+                          setShowSuggestions(false);
+                        }}
+                        className="flex items-center p-2 hover:bg-gray-100 cursor-pointer gap-2"
+                      >
+                        <img
+                          src={
+                            user?.userId?.profilePicture ||
+                            "/default-avatar.png"
+                          }
+                          alt="profile"
+                          className="size-8 rounded-full object-cover"
+                        />
+                        <div>
+                          <p className="font-medium text-sm">
+                            {user?.userId?.name}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            @{user?.userId?.username}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -242,16 +246,25 @@ export default function NavBarComponent() {
               </div>
             </div>
           )}
-          {!authState.profileFetched && (
-            <div
-              onClick={() => {
-                router.push("/login");
-              }}
-              className={styles.buttonJoin}
-            >
-              <p>Be a part</p>
-            </div>
+          
+        </div>
+        <div>
+          {!isLogin && (
+              <div>
+                {!authState.profileFetched && (
+              <div
+                onClick={() => {
+                  router.push("/login");
+                }}
+              >
+                <button className="bg-[#cd8997] border-none rounded-[10px] px-5 py-2.5 text-white text-sm font-bold cursor-pointer transition-all duration-300 shadow-md uppercase tracking-[0.5px] hover:bg-[#b06776] hover:shadow-lg hover:-translate-y-0.5">
+                  Login
+                </button>
+              </div>
+            )}
+              </div>
           )}
+          
         </div>
       </nav>
     </div>

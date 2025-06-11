@@ -69,24 +69,24 @@ export default function DashboardLayout({ children }) {
             {children}
           </div>
 
-          <div className="hidden sm:flex sm:flex-3/10 flex-col py-[5px] pl-[20px] pr-[5px] mt-3 ml-0 mr-2.5 bg-white h-[88vh] rounded-md border-l border-red-50 shadow-lg">
+          <div className="hidden sm:flex sm:flex-3/10 flex-col py-[5px] pb-3 pl-2 pr-[5px] mt-3 ml-0 mr-2.5 bg-white h-fit rounded-md border-l border-red-50 shadow-lg">
             <h2 className="font-semibold text-xl ">Top Profiles</h2>
             {authState.all_profiles_fetched &&
-              authState.all_users.map((user) => {
+              authState.all_users.slice(0, 10).map((user) => {
                 if (!user.userId) return null;
                 return (
                   <div
                     key={user._id}
-                    className="flex gap-3 p-3 shadow-lg rounded-lg"
+                    className="flex items-center gap-3 p-3 shadow-lg rounded-lg"
                   >
                     <div
                       onClick={() => {
                         router.push(`/view_profile/${user.userId.username}`);
                       }}
-                      className=""
+                      className="pt-4"
                     >
                       <img
-                        className=" rounded-full border-2 border-white size-14 sm:size-15 object-cover"
+                        className=" rounded-full border-2 border-white size-12 object-cover"
                         src={user.userId.profilePicture}
                         alt="Profile"
                       />
