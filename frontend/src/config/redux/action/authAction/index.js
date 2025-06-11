@@ -173,7 +173,7 @@ export const downloadResume = createAsyncThunk(
       window.URL.revokeObjectURL(url);
 
       return thunkAPI.fulfillWithValue("Downloaded successfully");
-    } catch (err) {
+    } catch{
       return thunkAPI.rejectWithValue("Download failed");
     }
   }
