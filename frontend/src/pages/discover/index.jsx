@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import UserLayout from "../../layout/UserLayout";
 import DashboardLayout from "../../layout/DashboardLayout";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,49 +11,69 @@ export default function DiscoverPage() {
   const authState = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
-
+  
   const router = useRouter();
+
+  
 
   useEffect(() => {
     if (!authState.all_profiles_fetched) {
       dispatch(getAllUsers());
     }
-  }, []);
+
+  }, [authState.user]);
 
   return (
     <UserLayout>
       <DashboardLayout>
         <div className="bg-gray-200 ">
-          <h1 className="bg-white mb-3 rounded-lg font-bold p-5 text-2xl">
+          <h1 className="bg-white mb-2 rounded-lg font-bold p-5 text-2xl">
             Discover
           </h1>
 
-          <div className=" max-w-full flex items-center flex-col gap-3">
+          <div className="bg-gray-100 rounded-lg grid grid-cols-2 items-center p-3 gap-3">
             {authState.all_profiles_fetched &&
               authState.all_users.map((user) => {
                 if (!user?.userId) return null;
                 return (
                   <div
-                    onClick={() => {
-                      router.push(`/view_profile/${user.userId.username}`);
-                    }}
                     key={user._id}
-                    className="bg-white cursor-pointer rounded-lg w-full h-25 flex p-5 gap-5"
+                    className="bg-white cursor-pointer sm:rounded-lg h-full flex p-3 flex-col gap-1"
                   >
-                    <div className="w-[12%]">
+                    <div
+                      onClick={() => {
+                        router.push(`/view_profile/${user.userId.username}`);
+                      }}
+                      className={`relative rounded-lg bg-no-repeat w-full h-[80px] ${styles.discover_card}`}
+                    >
                       <img
-                        className="rounded-full size-15 object-cover"
+                        className=" absolute left-10 bottom-[-20px] rounded-full border-2 border-white size-14 sm:size-15 object-cover"
                         src={user.userId.profilePicture}
                         alt="Profile"
                       />
                     </div>
-                    <div className="w-[30%]">
-                      <h2 className="font-bold">{user.userId.name}</h2>
-                      <p>@{user.userId.username}</p>
+                    <div className="pt-5">
+                      <h2
+                        onClick={() => {
+                          router.push(`/view_profile/${user.userId.username}`);
+                        }}
+                        className="font-bold"
+                      >
+                        {user.userId.name}
+                      </h2>
+                      <p className="text-gray-500 text-sm">@{user.userId.username}</p>
                     </div>
-                    <div className="w-[50%] top-0 flex flex-col mr-auto ">
-                      <h1 className=" font-semibold">Bio</h1>
-                      <h2 className="overflow-y-auto">{user.bio}</h2>
+                    <div className=" flex flex-col mr-auto ">
+                      <h1 className="font-semibold pt-2">Experience</h1>
+                      {user?.pastWork?.map((work, index) => {
+                        return (
+                          <div key={index} className="font-light text-sm">
+                            <p>
+                              {work.company} - {work.position}
+                            </p>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 );

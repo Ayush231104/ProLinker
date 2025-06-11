@@ -3,7 +3,7 @@ import NavBarComponent from "@/Components/Navbar";
 
 function UserLayout({ children }) {
   return (
-    <div>
+    <div className="fixed inset-0 overflow-y-scroll hide-scrollbar">
       <NavBarComponent />
       {children}
     </div>

@@ -8,12 +8,18 @@ import {
 import styles from "./styles.module.css";
 import { clientServer } from "../../config";
 import {
+  deleteComment,
   deletePost,
   getAllComments,
   getAllPosts,
   incrementPostLike,
+  postComment,
 } from "../../config/redux/action/postAction";
 import { useRouter } from "next/router";
+import {
+  resetPostId,
+  setSelectedPostId,
+} from "../../config/redux/reducer/postReducer";
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
@@ -25,6 +31,7 @@ export default function ProfilePage() {
   const [userPosts, setUserPosts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEducationModalOpen, setIsEducationModalOpen] = useState(false);
+  const [commentText, setCommentText] = useState("");
 
   const [inputData, setInputData] = useState({
     company: "",
@@ -129,6 +136,20 @@ export default function ProfilePage() {
 
   const currentUserSchools =
     authState.user?.education?.map((edu) => edu.school?.toLowerCase()) || [];
+
+  const handleSubmitComment = async () => {
+    if (commentText.trim() === "") return;
+
+    dispatch(getAllComments({ post_id: postReducer.selectedPostId }));
+    setCommentText("");
+    await dispatch(
+      postComment({
+        post_id: postReducer.selectedPostId,
+        body: commentText,
+      })
+    );
+    dispatch(getAllComments({ post_id: postReducer.selectedPostId }));
+  };
 
   return (
     <UserLayout>
@@ -437,19 +458,6 @@ export default function ProfilePage() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 p-2 rounded-lg">
                   {userPosts.map((post) => {
                     return (
-                      // <div key={post._id} className="">
-                      //   <div className="border border-gray-300 shadow-xl shadow-gray-300 rounded-lg  items-center gap-2">
-                      //     <div className="flex flex-col">
-                      //       <p className='flex p-2'>{post.body}</p>
-                      //       {post.media !== "" ?
-                      //         <img src={post.media} alt="post" className='' />
-                      //         :
-                      //         <div style={{width:"3.4rem", height:"3.4rem"}}></div>
-                      //       }
-                      //     </div>
-
-                      //   </div>
-                      // </div>
                       <div
                         key={post._id}
                         className="bg-white rounded-lg shadow-xl border border-gray-300"
@@ -548,7 +556,7 @@ export default function ProfilePage() {
                                   );
                                   dispatch(getAllPosts());
                                 }}
-                                className={`${styles.singleOption_optionsContainer} flex`}
+                                className="flex items-center cursor-pointer hover:text-sky-500 hover:scale-105 transition-transform duration-200"
                               >
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
@@ -569,11 +577,13 @@ export default function ProfilePage() {
 
                               <div
                                 onClick={() => {
+                                  dispatch(resetPostId());
+                                  dispatch(setSelectedPostId(post._id));
                                   dispatch(
                                     getAllComments({ post_id: post._id })
                                   );
                                 }}
-                                className={styles.singleOption_optionsContainer}
+                                className="flex items-center cursor-pointer hover:text-sky-500 hover:scale-105 transition-transform duration-200"
                               >
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
@@ -600,7 +610,7 @@ export default function ProfilePage() {
                                   const twitterUrl = `https://twitter.com/AyushShadow?${text}&url=${url}`;
                                   window.open(twitterUrl, "_blank");
                                 }}
-                                className={styles.singleOption_optionsContainer}
+                                className="flex items-center cursor-pointer hover:text-sky-500 hover:scale-105 transition-transform duration-200"
                               >
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
@@ -628,7 +638,112 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
+        {postReducer.selectedPostId !== "" && (
+          <div
+            onClick={() => {
+              dispatch(resetPostId());
+            }}
+            className={`fixed inset-0 z-50 flex items-center justify-center bg-black/60`}
+          >
+            <div
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+              className="relative bg-white rounded-lg w-[40vw] min-h-[40svh] max-w-[1120px] h-[80vh] p-6 flex flex-col"
+            >
+              <h2 className="text-lg font-bold mb-4">Comments</h2>
+              {(!postReducer.commentsByPostId[postReducer.selectedPostId] ||
+                postReducer.commentsByPostId[postReducer.selectedPostId]
+                  .length === 0) && (
+                <h2 className="text-gray-500 py-8 text-center">No Comments</h2>
+              )}
 
+              <div
+                className={`flex-1 overflow-y-auto space-y-4 pr-2 pb-20 hide-scrollbar`}
+              >
+                {postReducer.commentsByPostId[postReducer.selectedPostId]
+                  ?.length > 0 && (
+                  <div className="flex flex-col gap-2">
+                    {postReducer.commentsByPostId[
+                      postReducer.selectedPostId
+                    ].map((comment) => {
+                      let user = comment.userId;
+                      // If userId is just an ID, find the user in allUsers
+                      if (typeof user === "string" && authState.allUsers) {
+                        user = authState.allUsers.find((u) => u._id === user);
+                      }
+                      return (
+                        <div
+                          className="shadow-lg rounded-lg flex flex-col h-fit gap-3"
+                          key={comment._id}
+                        >
+                          <div className="flex items-start gap-3 bg-gray-50 p-2 rounded-lg">
+                            <img
+                              className="rounded-full size-10 object-cover"
+                              src={comment.userId.profilePicture}
+                              alt=""
+                            />
+                            <div>
+                              <p className="font-semibold text-sm">
+                                {comment.userId.name}
+                              </p>
+                              <p className="text-gray-600 text-xs">
+                                @{comment.userId.username}
+                              </p>
+                              <div>
+                                <p className="mt-1 text-sm">{comment.body}</p>
+                              </div>
+                              {comment.userId._id ===
+                                authState.user?.userId?._id && (
+                                <button
+                                  onClick={async () => {
+                                    await dispatch(
+                                      deleteComment({
+                                        comment_id: comment._id,
+                                        post_id: postReducer.selectedPostId,
+                                      })
+                                    );
+                                    await dispatch(
+                                      getAllComments(postReducer.selectedPostId)
+                                    );
+                                  }}
+                                  className="text-red-500 text-xs"
+                                >
+                                  Delete
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              <div className="absolute bottom-5 left-5 w-[90%] flex items-center justify-center gap-5">
+                <input
+                  type="text"
+                  value={commentText}
+                  className="flex-[0.9] px-6 py-4 border-none outline-none bg-gray-200 rounded-lg focus:border focus:border-gray-300"
+                  onChange={(e) => setCommentText(e.target.value)}
+                  onKeyDown={async (e) => {
+                    if (e.key === "Enter") {
+                      await handleSubmitComment();
+                    }
+                  }}
+                  placeholder="Comment"
+                />
+                <div
+                  onClick={handleSubmitComment}
+                  className="flex-[0.1] w-fit px-4 py-4 bg-[#311c1c] rounded-lg text-center text-[aliceblue] cursor-pointer"
+                >
+                  <p>Comment</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         <div className="bg-gray-200 flex flex-col flex-2/10 w-full rounded-lg">
           <div className="flex flex-col gap-3">
             <div className="flex flex-col bg-white rounded-lg w-full h-fit ">
@@ -672,7 +787,7 @@ export default function ProfilePage() {
                               );
                             }}
                             key={user._id}
-                            className="bg-white rounded-lg flex w-full items-center justify-start p-5 gap-5"
+                            className="bg-white rounded-lg flex w-full items-center justify-start p-5 gap-5 cursor-pointer"
                           >
                             <img
                               className="rounded-full size-15 "
@@ -692,6 +807,73 @@ export default function ProfilePage() {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div className="fixed bottom-0 left-0 w-full h-12 bg-white flex justify-around items-center z-50 md:hidden">
+        <div
+          onClick={() => {
+            router.push("/dashboard");
+          }}
+          className={`flex flex-col items-center justify-center cursor-pointer`}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
+            />
+          </svg>
+          <p className="text-sm">Home</p>
+        </div>
+        <div
+          onClick={() => {
+            router.push("/discover");
+          }}
+          className="flex flex-col items-center justify-center cursor-pointer"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="size-6"
+          >
+            <path
+              fillRule="evenodd"
+              d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM15.75 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM2.25 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM6.31 15.117A6.745 6.745 0 0 1 12 12a6.745 6.745 0 0 1 6.709 7.498.75.75 0 0 1-.372.568A12.696 12.696 0 0 1 12 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 0 1-.372-.568 6.787 6.787 0 0 1 1.019-4.38Z"
+              clipRule="evenodd"
+            />
+            <path d="M5.082 14.254a8.287 8.287 0 0 0-1.308 5.135 9.687 9.687 0 0 1-1.764-.44l-.115-.04a.563.563 0 0 1-.373-.487l-.01-.121a3.75 3.75 0 0 1 3.57-4.047ZM20.226 19.389a8.287 8.287 0 0 0-1.308-5.135 3.75 3.75 0 0 1 3.57 4.047l-.01.121a.563.563 0 0 1-.373.486l-.115.04c-.567.2-1.156.349-1.764.441Z" />
+          </svg>
+          <p className="text-sm">Discover</p>
+        </div>
+        <div
+          onClick={() => {
+            router.push("/my_connections");
+          }}
+          className="flex flex-col items-center justify-center cursor-pointer"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="size-6"
+          >
+            <path d="M5.85 3.5a.75.75 0 0 0-1.117-1 9.719 9.719 0 0 0-2.348 4.876.75.75 0 0 0 1.479.248A8.219 8.219 0 0 1 5.85 3.5ZM19.267 2.5a.75.75 0 1 0-1.118 1 8.22 8.22 0 0 1 1.987 4.124.75.75 0 0 0 1.48-.248A9.72 9.72 0 0 0 19.266 2.5Z" />
+            <path
+              fillRule="evenodd"
+              d="M12 2.25A6.75 6.75 0 0 0 5.25 9v.75a8.217 8.217 0 0 1-2.119 5.52.75.75 0 0 0 .298 1.206c1.544.57 3.16.99 4.831 1.243a3.75 3.75 0 1 0 7.48 0 24.583 24.583 0 0 0 4.83-1.244.75.75 0 0 0 .298-1.205 8.217 8.217 0 0 1-2.118-5.52V9A6.75 6.75 0 0 0 12 2.25ZM9.75 18c0-.034 0-.067.002-.1a25.05 25.05 0 0 0 4.496 0l.002.1a2.25 2.25 0 1 1-4.5 0Z"
+              clipRule="evenodd"
+            />
+          </svg>
+          <p className="text-sm">Connections</p>
         </div>
       </div>
     </UserLayout>

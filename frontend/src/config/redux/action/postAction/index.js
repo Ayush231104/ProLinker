@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { clientServer } from "../../..";
+import { BASE_URL, clientServer } from "../../..";
 
 export const getAllPosts = createAsyncThunk(
   "post/getAllPosts",
@@ -122,15 +122,17 @@ export const postComment = createAsyncThunk(
 
 export const deleteComment = createAsyncThunk(
   "post/deleteComment",
-  async ({ comment_id }, thunkAPI) => {
+  async ({ comment_id, post_id }, thunkAPI) => {
     try {
-        console.log("Trying to delete comment:", commentId);
-      const response = await axios.delete(`/delete_comment`, {
-        data: {
+        console.log("Trying to delete comment:", comment_id);
+      const response = await clientServer.delete("/delete_comment", {
+        params: {
           token: localStorage.getItem("token"),
           comment_id: comment_id,
         },
       });
+            thunkAPI.dispatch(getAllComments({ post_id }));
+
       return response.data; // optional: you could also return commentId
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message);

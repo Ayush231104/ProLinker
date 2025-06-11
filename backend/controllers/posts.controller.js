@@ -133,7 +133,7 @@ export const get_comments_by_post = async (req, res) => {
 };
 
 export const delete_comment_of_user = async (req, res) => {
-  const { token, comment_id } = req.body;
+  const { token, comment_id } = req.query;
 
   try {
     const user = await User.findOne({ token: token }).select("_id");

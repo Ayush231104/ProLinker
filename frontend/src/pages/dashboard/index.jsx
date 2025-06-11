@@ -16,8 +16,6 @@ import {
 } from "../../config/redux/action/authAction";
 import UserLayout from "../../layout/UserLayout";
 import DashboardLayout from "../../layout/DashboardLayout";
-import styles from "./styles.module.css";
-import { BASE_URL } from "../../config";
 import {
   resetPostId,
   setSelectedPostId,
@@ -53,13 +51,27 @@ export default function Dashboard() {
     dispatch(getAllPosts());
   };
 
+  const handleSubmitComment = async () => {
+    if (commentText.trim() === "") return;
+
+    dispatch(getAllComments({ post_id: postState.selectedPostId }));
+    setCommentText("");
+    await dispatch(
+      postComment({
+        post_id: postState.selectedPostId,
+        body: commentText,
+      })   
+    );
+    dispatch(getAllComments({ post_id: postState.selectedPostId }));
+  };
+
   if (authState.user) {
     return (
       <UserLayout>
         <DashboardLayout>
           <div className="flex justify-center flex-col bg-gray-200 gap-1">
             <div className="flex justify-center items-center">
-              <div className=" relative bg-white shadow-xl rounded-lg w-full flex h-fit items-center p-5 justify-center gap-6">
+              <div className=" relative bg-white shadow-xl sm:rounded-lg w-full flex h-fit items-center p-5 justify-center gap-6">
                 <img
                   className="rounded-full size-13"
                   src={authState.user.userId.profilePicture}
@@ -69,26 +81,30 @@ export default function Dashboard() {
                   onChange={(e) => setPostContent(e.target.value)}
                   value={postContent}
                   placeholder={"What's in your mind?"}
-                  className={styles.textareaOfFeed}
+                  className="w-[80%] h-[80%] border border-gray-400 rounded-[10px] font-sans px-5 py-2 outline-none"
                   name="text"
                   id=""
                 ></textarea>
                 <label htmlFor="fileUpload">
-                  <div className={styles.fab}>
-                    <svg
+                  <div className="flex justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-8 text-gray-500">
+                      <path fillRule="evenodd" d="M1.5 6a2.25 2.25 0 0 1 2.25-2.25h16.5A2.25 2.25 0 0 1 22.5 6v12a2.25 2.25 0 0 1-2.25 2.25H3.75A2.25 2.25 0 0 1 1.5 18V6ZM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0 0 21 18v-1.94l-2.69-2.689a1.5 1.5 0 0 0-2.12 0l-.88.879.97.97a.75.75 0 1 1-1.06 1.06l-5.16-5.159a1.5 1.5 0 0 0-2.12 0L3 16.061Zm10.125-7.81a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Z" clipRule="evenodd" />
+                    </svg>
+
+                    {/* <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
                       strokeWidth={1.5}
                       stroke="currentColor"
-                      className="size-6"
+                      className="size-8 text-blue-50"
                     >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         d="M12 4.5v15m7.5-7.5h-15"
                       />
-                    </svg>
+                    </svg> */}
                   </div>
                 </label>
                 <input
@@ -100,7 +116,9 @@ export default function Dashboard() {
                 {postContent.length > 0 && (
                   <div
                     onClick={handleUpload}
-                    className={`${styles.uploadButton} absolute right-0 bg-sky-500 text-blue-50 rounded-lg px-6 py-1 `}
+                    className="absolute right-0 -bottom-5 cursor-pointer font-semibold transition-all duration-300 ease-in-out shadow-md 
+                    bg-sky-500 text-blue-50 rounded-lg px-6 py-1
+                    hover:bg-[#00aaff] hover:text-white hover:-translate-y-0.5 hover:scale-[1.03] hover:shadow-lg"
                   >
                     Post
                   </div>
@@ -114,17 +132,15 @@ export default function Dashboard() {
             </div>
 
             <div className="bg-gray-200">
-              <div className="flex flex-col rounded-lg gap-3">
+              <div className="flex flex-col sm:rounded-lg gap-3">
                 {postState.posts.map((post) => {
                   if (!post.userId) return null;
                   return (
                     <div
                       key={post._id}
-                      className="bg-white rounded-lg shadow-xl"
+                      className="bg-white sm:rounded-lg shadow-xl"
                     >
-                      <div
-                        className={` flex flex-col ${styles.singleCard_profileContainer}`}
-                      >
+                      <div className={` flex flex-col`}>
                         <div className="flex relative gap-5 w-full px-5 py-3">
                           <img
                             onClick={() => {
@@ -210,9 +226,13 @@ export default function Dashboard() {
                             )}
                           </p>
                         </div>
-                        <div className={`${styles.singleCard_image}`}>
+                        <div className="w-full h-fit">
                           {post.media !== "" ? (
-                            <img src={post.media} alt="postmedia" />
+                            <img
+                              src={post.media}
+                              className="w-full h-auto object-cover"
+                              alt="postmedia"
+                            />
                           ) : (
                             <></>
                           )}
@@ -227,7 +247,7 @@ export default function Dashboard() {
                                 );
                                 dispatch(getAllPosts());
                               }}
-                              className={`${styles.singleOption_optionsContainer} `}
+                              className="flex items-center cursor-pointer hover:text-sky-500 hover:scale-105 transition-transform duration-200"
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -248,11 +268,11 @@ export default function Dashboard() {
 
                             <div
                               onClick={() => {
-                                // dispatch(resetPostId());
+                                dispatch(resetPostId());
                                 dispatch(setSelectedPostId(post._id));
                                 dispatch(getAllComments({ post_id: post._id }));
                               }}
-                              className={styles.singleOption_optionsContainer}
+                              className="flex items-center cursor-pointer hover:text-sky-500 hover:scale-105 transition-transform duration-200"
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -279,7 +299,7 @@ export default function Dashboard() {
                                 const twitterUrl = `https://twitter.com/AyushShadow?${text}&url=${url}`;
                                 window.open(twitterUrl, "_blank");
                               }}
-                              className={styles.singleOption_optionsContainer}
+                              className="flex items-center cursor-pointer hover:text-sky-500 hover:scale-105 transition-transform duration-200"
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -316,7 +336,7 @@ export default function Dashboard() {
                 onClick={(e) => {
                   e.stopPropagation();
                 }}
-                className={`relative bg-white rounded-lg w-[40vw] min-h-[40svh] max-w-[1120px] h-[80vh] p-6 flex flex-col ${styles.allCommentsContainer}`}
+                className="relative bg-white rounded-lg w-[95vw] sm:w-[60vw] lg:w-[40vh] min-h-[40svh] max-w-[1120px] h-[50vh] sm:h-[80vh] p-6 flex flex-col"
               >
                 <h2 className="text-lg font-bold mb-4">Comments</h2>
                 {(!postState.commentsByPostId[postState.selectedPostId] ||
@@ -327,7 +347,9 @@ export default function Dashboard() {
                   </h2>
                 )}
 
-                <div className="flex-1 overflow-y-auto space-y-4 pr-2 pb-20">
+                <div
+                  className={`flex-1 overflow-y-auto space-y-4 pr-2 pb-20 hide-scrollbar`}
+                >
                   {postState.commentsByPostId[postState.selectedPostId]
                     ?.length > 0 && (
                     <div className="flex flex-col gap-2">
@@ -364,11 +386,20 @@ export default function Dashboard() {
                                     </p>
                                   </div>
                                   {comment.userId._id ===
-                                    authState.user.userId._id && (
+                                    authState.user?.userId?._id && (
                                     <button
-                                      onClick={() =>{
-                                        dispatch(deleteComment({ commentId: comment._id }))
-                                        dispatch(getAllComments(post._id))
+                                      onClick={async () => {
+                                        await dispatch(
+                                          deleteComment({
+                                            comment_id: comment._id,
+                                            post_id: postState.selectedPostId,
+                                          })
+                                        );
+                                        await dispatch(
+                                          getAllComments(
+                                            postState.selectedPostId
+                                          )
+                                        );
                                       }}
                                       className="text-red-500 text-xs"
                                     >
@@ -385,29 +416,22 @@ export default function Dashboard() {
                   )}
                 </div>
 
-                <div className={styles.postCommentContainer}>
+                <div className="absolute bottom-2 sm:bottom-5 left-[18px] sm:left-5 w-[90%] flex items-center justify-center gap-2 sm:gap-5">
                   <input
                     type="text"
                     value={commentText}
-                    className="flex-1 px-6 py-3 rounded-lg bg-gray-200 focus:border focus:border-gray-400 outline-none"
+                    className="flex-[0.9] px-6 py-4 border-none outline-none bg-gray-200 rounded-lg focus:border focus:border-gray-300"
                     onChange={(e) => setCommentText(e.target.value)}
+                    onKeyDown={async (e) => {
+                      if (e.key === "Enter") {
+                        await handleSubmitComment();
+                      }
+                    }}
                     placeholder="Comment"
                   />
                   <div
-                    onClick={async () => {
-                      if (commentText.trim() === "") return;
-                      await dispatch(
-                        getAllComments({ post_id: postState.selectedPostId })
-                      );
-                      setCommentText("");
-                      await dispatch(
-                        postComment({
-                          post_id: postState.selectedPostId,
-                          body: commentText,
-                        })
-                      );
-                    }}
-                    className="px-5 py-3 bg-gray-800 text-white rounded-lg font-semibold hover:bg-gray-900 transition"
+                    onClick={handleSubmitComment}
+                    className="flex-[0.1] w-fit px-4 py-4 bg-[#311c1c] rounded-lg text-center text-[aliceblue] cursor-pointer"
                   >
                     <p>Comment</p>
                   </div>
