@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import Post from "../models/posts.model.js";
 import Comment from "../models/comments.model.js";
+import mongoose from "mongoose";
 
 export const activeCheck = async (req, res) => {
   return res.status(200).json({ message: "Running" });
@@ -160,24 +161,65 @@ export const delete_comment_of_user = async (req, res) => {
   }
 };
 
-export const increment_likes = async (req, res) => {
-  const { post_id } = req.body;
+// export const increment_likes = async (req, res) => {
+//   const { post_id } = req.body;
+
+//   try {
+//     const post = await Post.findOne({ _id: post_id });
+//     // const post = await Post.findById(post_id);
+
+//     if (!post) {
+//       return res.status(404).json({ message: "Post Not Found" });
+//     }
+
+//     post.likes = (post.likes || 0) + 1;
+
+
+//     await post.save();
+
+//     return res.json({ message: "Likes Incremented" });
+//   } catch (err) {
+//     return res.status(500).json({ message: err.message });
+//   }
+// };
+
+export const toggle_like = async (req, res) => {
+  const { post_id, user_id } = req.body;
+
+  if (!post_id || !user_id) {
+    return res.status(400).json({ message: "post_id and user_id are required" });
+  }
 
   try {
-    const post = await Post.findOne({ _id: post_id });
-    // const post = await Post.findById(post_id);
-
+    const post = await Post.findById(post_id);
     if (!post) {
       return res.status(404).json({ message: "Post Not Found" });
     }
 
-    post.likes = (post.likes || 0) + 1;
+    // Ensure likes is always an array
+    if (!Array.isArray(post.likes)) post.likes = [];
 
+    // Convert user_id to ObjectId
+    const userObjectId = new mongoose.Types.ObjectId(user_id);
+
+    // Use .some() and .equals() for ObjectId comparison
+    const hasLiked = post.likes.some(id => id.equals(userObjectId));
+
+    if (hasLiked) {
+      post.likes.pull(userObjectId);
+    } else {
+      post.likes.push(userObjectId);
+    }
 
     await post.save();
 
-    return res.json({ message: "Likes Incremented" });
+    return res.json({
+      message: hasLiked ? "Like removed" : "Like added",
+      likesCount: post.likes.length,
+      liked: !hasLiked,
+    });
   } catch (err) {
+    console.error(err);
     return res.status(500).json({ message: err.message });
   }
 };

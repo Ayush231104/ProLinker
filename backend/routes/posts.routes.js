@@ -7,7 +7,8 @@ import {
   deletePost,
   get_comments_by_post,
   getAllPosts,
-  increment_likes,
+//   increment_likes,
+  toggle_like,
 } from "../controllers/posts.controller.js";
 import multer from "multer";
 
@@ -58,6 +59,8 @@ router.route("/delete_post").delete(deletePost);
 router.route("/comment").post(commentPost);
 router.route("/get_comments").get(get_comments_by_post);
 router.route("/delete_comment").delete(delete_comment_of_user);
-router.route("/increment_post_like").post(increment_likes);
+// router.route("/increment_post_like").post(increment_likes);
+router.route("/toggle_post_like").post(toggle_like);
+
 
 export default router;

@@ -255,7 +255,7 @@ export default function NavBarComponent() {
                   onClick={() => {
                     router.push("/login");
                   }}
-                  className="flex items-center"
+                  className="flex sm:hidden items-center"
                 >
                   <h1 className=" absolute left-[-230px] flex text-xl sm:text-2xl font-bold cursor-pointer">
                     Pro Linker

@@ -61,12 +61,26 @@ export const deletePost = createAsyncThunk(
   }
 );
 
-export const incrementPostLike = createAsyncThunk(
-  "post/increment_likes",
-  async (post, thunkAPI) => {
+// export const incrementPostLike = createAsyncThunk(
+//   "post/increment_likes",
+//   async (post, thunkAPI) => {
+//     try {
+//       const response = clientServer.post("increment_post_like", {
+//         post_id: post.post_id,
+//       });
+//       return thunkAPI.fulfillWithValue(response.data);
+//     } catch (err) {
+//       return thunkAPI.rejectWithValue(err.response.data);
+//     }
+//   }
+// );
+export const togglePostLike = createAsyncThunk(
+  "post/toggle_like",
+  async ({ post_id, user_id }, thunkAPI) => {
     try {
-      const response = clientServer.post("increment_post_like", {
-        post_id: post.post_id,
+      const response = await clientServer.post("toggle_post_like", {
+        post_id,
+        user_id,
       });
       return thunkAPI.fulfillWithValue(response.data);
     } catch (err) {
