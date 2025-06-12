@@ -73,7 +73,7 @@ export default function Dashboard() {
             <div className="flex justify-center items-center">
               <div className=" relative bg-white shadow-xl sm:rounded-lg w-full flex h-fit items-center p-5 justify-center gap-6">
                 <img
-                  className="rounded-full size-13"
+                  className="rounded-full size-13 object-cover"
                   src={authState.user.userId.profilePicture}
                   alt=""
                 />
@@ -90,21 +90,6 @@ export default function Dashboard() {
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-8 text-gray-500">
                       <path fillRule="evenodd" d="M1.5 6a2.25 2.25 0 0 1 2.25-2.25h16.5A2.25 2.25 0 0 1 22.5 6v12a2.25 2.25 0 0 1-2.25 2.25H3.75A2.25 2.25 0 0 1 1.5 18V6ZM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0 0 21 18v-1.94l-2.69-2.689a1.5 1.5 0 0 0-2.12 0l-.88.879.97.97a.75.75 0 1 1-1.06 1.06l-5.16-5.159a1.5 1.5 0 0 0-2.12 0L3 16.061Zm10.125-7.81a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Z" clipRule="evenodd" />
                     </svg>
-
-                    {/* <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="size-8 text-blue-50"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 4.5v15m7.5-7.5h-15"
-                      />
-                    </svg> */}
                   </div>
                 </label>
                 <input
@@ -148,7 +133,7 @@ export default function Dashboard() {
                                 `/view_profile/${post.userId.username}`
                               );
                             }}
-                            className="rounded-full size-15 cursor-pointer"
+                            className="rounded-full size-15 object-cover cursor-pointer"
                             src={post.userId.profilePicture}
                             alt=""
                           />
@@ -160,7 +145,7 @@ export default function Dashboard() {
                                   `/view_profile/${post.userId.username}`
                                 );
                               }}
-                              className="font-bold cursor-pointer"
+                              className="font-bold text-xl cursor-pointer"
                             >
                               {post.userId.name}
                             </p>
@@ -242,6 +227,7 @@ export default function Dashboard() {
                           <div className="flex justify-between py-2 items-center px-15">
                             <div
                               onClick={async () => {
+                                dispatch(getAllPosts());
                                 await dispatch(
                                   incrementPostLike({ post_id: post._id })
                                 );

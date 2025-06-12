@@ -155,7 +155,7 @@ export default function ProfilePage() {
     <UserLayout>
       <div className="bg-gray-200 flex gap-6 lg:px-45 pt-3">
         <div className="bg-gray-200 flex flex-7/10 w-full">
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 w-full">
             {authState.user && userProfile.userId && (
               <div className="bg-white rounded-lg flex flex-col p-3">
                 <div className="">
@@ -172,12 +172,13 @@ export default function ProfilePage() {
                       }}
                       style={{ display: "none" }}
                       type="file"
-                      name="profilePicture"
+                      name="profile_picture"
                       id="profilePictureUpload"
                     />
                     <img
                       src={userProfile.userId.profilePicture}
                       alt="backdrop"
+                      className="object-cover"
                     />
                   </div>
                   <div className="">
@@ -467,7 +468,7 @@ export default function ProfilePage() {
                         >
                           <div className="flex relative gap-5 w-full px-5 py-3">
                             <img
-                              className="rounded-full size-15"
+                              className="rounded-full size-[4rem] object-cover"
                               src={post?.userId?.profilePicture}
                               alt=""
                             />
@@ -744,7 +745,7 @@ export default function ProfilePage() {
             </div>
           </div>
         )}
-        <div className="bg-gray-200 flex flex-col flex-2/10 w-full rounded-lg">
+        <div className="bg-gray-200  hidden sm:flex flex-col flex-2/10 w-full rounded-lg">
           <div className="flex flex-col gap-3">
             <div className="flex flex-col bg-white rounded-lg w-full h-fit ">
               <div className="flex flex-col bg-white p-3 rounded-t-lg ">
@@ -790,7 +791,7 @@ export default function ProfilePage() {
                             className="bg-white rounded-lg flex w-full items-center justify-start p-5 gap-5 cursor-pointer"
                           >
                             <img
-                              className="rounded-full size-15 "
+                              className="rounded-full size-[3.6rem] "
                               src={user?.userId?.profilePicture}
                               alt="Profile"
                             />

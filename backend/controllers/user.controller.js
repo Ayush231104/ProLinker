@@ -204,6 +204,10 @@ export const uploadProfilePicture = async (req, res) => {
       return res.status(404).json({ message: "User Not Found" });
     }
 
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
     // user.profilePicture = req.file.filename;
     user.profilePicture = req.file.path;
 

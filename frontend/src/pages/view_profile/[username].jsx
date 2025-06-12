@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BASE_URL, clientServer } from "../../config";
+import { clientServer } from "../../config";
 import DashboardLayout from "../../layout/DashboardLayout";
 import UserLayout from "../../layout/UserLayout";
 import styles from "./styles.module.css";
@@ -129,9 +129,9 @@ export default function ViewProfilePage({ userProfile }) {
           <div className="p-3 bg-white flex rounded-lg flex-col gap-3">
             <div className="bg-white">
               <div className="">
-                <div className={styles.backDropContainer}>
+                <div className="w-full h-[25vh] relative rounded-[10px] bg-cover bg-no-repeat" style={{ backgroundImage: `url("https://images.unsplash.com/photo-1506744038136-46273834b3fb")` }}>
                   <img
-                    className={styles.backDrop}
+                    className="w-40 h-40 object-cover rounded-full absolute left-8 -bottom-[30%] border-4 border-white"
                     src={userProfile.userId.profilePicture}
                     alt="backdrop"
                   />
@@ -266,7 +266,7 @@ export default function ViewProfilePage({ userProfile }) {
                       >
                         <div className="flex relative gap-5 w-full px-5 py-3">
                           <img
-                            className="rounded-full size-15"
+                            className="rounded-full size-[3.6rem] object-cover"
                             src={post?.userId?.profilePicture}
                             alt=""
                           />
@@ -335,9 +335,9 @@ export default function ViewProfilePage({ userProfile }) {
                             )}
                           </p>
                         </div>
-                        <div className={`${styles.singleCard_image}`}>
+                        <div className="w-full">
                           {post.media !== "" ? (
-                            <img src={post.media} alt="postmedia" />
+                            <img src={post.media} className="h-[220px] w-full" alt="postmedia" />
                           ) : (
                             <></>
                           )}

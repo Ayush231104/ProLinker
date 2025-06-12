@@ -44,7 +44,7 @@ export default function MyConnectionsPage() {
                       }} className="bg-white rounded-lg flex w-full p-3 mb-3 items-center shadow-lg" key={index}>
                         <div className='bg-white rounded-lg relative w-full ' style={{display: "flex", alignItems: "center", gap:"1.2rem", justifyContent: "space-between"}}>
                 
-                            <img className=' rounded-full size-15' src={user.userId.profilePicture} alt="" />
+                            <img className=' rounded-full size-15 object-cover' src={user.userId.profilePicture} alt="" />
                 
                           <div className={styles.userInfo}>
                             <h3 className='font-semibold'>{user.userId.name}</h3>
@@ -77,7 +77,7 @@ export default function MyConnectionsPage() {
                       }} className="bg-white flex items-center rounded-lg" key={index}>
                         <div className='bg-white rounded-lg p-3 flex justify-between items-center gap-5'>
   
-                          <img className=' rounded-full size-15' src={user.userId.profilePicture} alt="" />
+                          <img className=' rounded-full size-15 object-cover' src={user.userId.profilePicture} alt="" />
   
                           <div className="">
                             <h3 className='font-semibold'>{user.userId.name}</h3>

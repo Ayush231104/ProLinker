@@ -8,8 +8,7 @@
 }
 
 .backDropContainer img{
-    width: 5em;
-    height: 5em;
+
     object-fit: cover;
     border-radius: 50%;
     position: absolute;

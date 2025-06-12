@@ -246,25 +246,27 @@ export default function NavBarComponent() {
               </div>
             </div>
           )}
-          
         </div>
         <div>
           {!isLogin && (
-              <div>
-                {!authState.profileFetched && (
-              <div
-                onClick={() => {
-                  router.push("/login");
-                }}
-              >
-                <button className="bg-[#cd8997] border-none rounded-[10px] px-5 py-2.5 text-white text-sm font-bold cursor-pointer transition-all duration-300 shadow-md uppercase tracking-[0.5px] hover:bg-[#b06776] hover:shadow-lg hover:-translate-y-0.5">
-                  Login
-                </button>
-              </div>
-            )}
-              </div>
+            <div className=" relative">
+              {!authState.profileFetched && (
+                <div
+                  onClick={() => {
+                    router.push("/login");
+                  }}
+                  className="flex items-center"
+                >
+                  <h1 className=" absolute left-[-230px] flex text-xl sm:text-2xl font-bold cursor-pointer">
+                    Pro Linker
+                  </h1>
+                  <button className="bg-[#cd8997] border-none rounded-[10px] px-5 py-2.5 text-white text-sm font-bold cursor-pointer transition-all duration-300 shadow-md uppercase tracking-[0.5px] hover:bg-[#b06776] hover:shadow-lg hover:-translate-y-0.5">
+                    Login
+                  </button>
+                </div>
+              )}
+            </div>
           )}
-          
         </div>
       </nav>
     </div>
