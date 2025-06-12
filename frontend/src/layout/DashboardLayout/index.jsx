@@ -83,7 +83,7 @@ export default function DashboardLayout({ children }) {
                       onClick={() => {
                         router.push(`/view_profile/${user.userId.username}`);
                       }}
-                      className="pt-4"
+                      className="pt-4 cursor-pointer"
                     >
                       <img
                         className=" rounded-full border-2 border-white size-12 object-cover"

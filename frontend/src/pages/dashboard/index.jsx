@@ -75,41 +75,43 @@ export default function Dashboard() {
           <div className="flex justify-center flex-col bg-gray-200 gap-1">
             <div className="flex justify-center items-center">
               <div className=" relative bg-white shadow-xl sm:rounded-lg w-full flex h-fit items-center p-5 justify-center gap-6">
-                <img
-                  className="rounded-full size-13 object-cover"
-                  src={authState.user.userId.profilePicture}
-                  alt=""
-                />
-                <textarea
-                  onChange={(e) => setPostContent(e.target.value)}
-                  value={postContent}
-                  placeholder={"What's in your mind?"}
-                  className="w-[80%] h-[80%] border border-gray-400 rounded-[10px] font-sans px-5 py-2 outline-none"
-                  name="text"
-                  id=""
-                ></textarea>
-                <label htmlFor="fileUpload">
-                  <div className="flex justify-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="size-8 text-gray-500"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M1.5 6a2.25 2.25 0 0 1 2.25-2.25h16.5A2.25 2.25 0 0 1 22.5 6v12a2.25 2.25 0 0 1-2.25 2.25H3.75A2.25 2.25 0 0 1 1.5 18V6ZM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0 0 21 18v-1.94l-2.69-2.689a1.5 1.5 0 0 0-2.12 0l-.88.879.97.97a.75.75 0 1 1-1.06 1.06l-5.16-5.159a1.5 1.5 0 0 0-2.12 0L3 16.061Zm10.125-7.81a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                </label>
-                <input
-                  onChange={(e) => setFileContent(e.target.files[0])}
-                  type="file"
-                  hidden
-                  id="fileUpload"
-                />
+                <div className="flex items-center gap-3 w-full">
+                  <img
+                    className="rounded-full size-[3.6rem] object-cover"
+                    src={authState.user.userId.profilePicture}
+                    alt=""
+                  />
+                  <textarea
+                    onChange={(e) => setPostContent(e.target.value)}
+                    value={postContent}
+                    placeholder={"Share your latest update or idea..."}
+                    className="w-[80%] h-[80%] border border-gray-400 rounded-[10px] font-sans px-5 py-2 outline-none"
+                    name="text"
+                    id=""
+                  ></textarea>
+                  <label htmlFor="fileUpload">
+                    <div className="flex justify-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="size-8 text-gray-500"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M1.5 6a2.25 2.25 0 0 1 2.25-2.25h16.5A2.25 2.25 0 0 1 22.5 6v12a2.25 2.25 0 0 1-2.25 2.25H3.75A2.25 2.25 0 0 1 1.5 18V6ZM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0 0 21 18v-1.94l-2.69-2.689a1.5 1.5 0 0 0-2.12 0l-.88.879.97.97a.75.75 0 1 1-1.06 1.06l-5.16-5.159a1.5 1.5 0 0 0-2.12 0L3 16.061Zm10.125-7.81a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                  </label>
+                  <input
+                    onChange={(e) => setFileContent(e.target.files[0])}
+                    type="file"
+                    hidden
+                    id="fileUpload"
+                  />
+                </div>
                 {postContent.length > 0 && (
                   <div
                     onClick={handleUpload}
