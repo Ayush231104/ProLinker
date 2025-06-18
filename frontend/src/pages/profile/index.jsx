@@ -119,6 +119,24 @@ export default function ProfilePage() {
 
     dispatch(getAboutUser({ token: localStorage.getItem("token") }));
   };
+  const updateBackgroundPicture = async (file) => {
+    const formData = new FormData();
+    formData.append("background_picture", file);
+    formData.append("token", localStorage.getItem("token"));
+
+    const response = await clientServer.post(
+      "/update_background_picture",
+      formData,
+      {
+        //const response = after removing this it steel work
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    dispatch(getAboutUser({ token: localStorage.getItem("token") }));
+  };
 
   const updateProfileData = async () => {
     const request = await clientServer.post("/user_update", {
@@ -162,10 +180,39 @@ export default function ProfilePage() {
             {authState.user && userProfile.userId && (
               <div className="bg-white rounded-lg flex flex-col p-3">
                 <div className="">
-                  <div className={styles.backDropContainer}>
+                  <div
+                    style={{
+                      backgroundImage: userProfile.userId.backgroundPicture
+                        ? `url(${userProfile.userId.backgroundPicture})`
+                        : "none",
+                      backgroundColor: !userProfile.userId.backgroundPicture
+                        ? "#f3f4f6"
+                        : undefined, // fallback color
+                      height: "25vh",
+                      backgroundSize: "cover",
+                    }}
+                    className="w-full h-[25vh] bg-no-repeat relative rounded-[10px]"
+                  >
+                    <label
+                      htmlFor="backgroundPictureUpload"
+                      className="absolute top-4 right-4 px-4 py-2 rounded bg-black bg-opacity-60 text-white cursor-pointer z-20 hover:bg-opacity-80 transition-all duration-400"
+                    >
+                      Edit Background
+                    </label>
+                    <input
+                      onChange={(e) => {
+                        updateBackgroundPicture(e.target.files[0]);
+                      }}
+                      style={{ display: "none" }}
+                      type="file"
+                      name="background_picture"
+                      id="backgroundPictureUpload"
+                      accept="image/*"
+                    />
+
                     <label
                       htmlFor="profilePictureUpload"
-                      className={styles.backDrop_overlay}
+                      className="w-40 h-40 rounded-full absolute bottom-[-30%] left-[8%] border-[4px] border-white z-10 cursor-pointer text-white opacity-0 flex items-center justify-center font-medium hover:bg-black hover:opacity-60 transition-all duration-400"
                     >
                       <p>Edit</p>
                     </label>
@@ -181,7 +228,7 @@ export default function ProfilePage() {
                     <img
                       src={userProfile.userId.profilePicture}
                       alt="backdrop"
-                      className="object-cover"
+                      className="w-40 h-40 rounded-full absolute bottom-[-30%] left-[8%] border-[4px] border-white"
                     />
                   </div>
                   <div className="">
@@ -217,6 +264,7 @@ export default function ProfilePage() {
 
                           <div>
                             <textarea
+                              placeholder="Skill || About Yourself ..."
                               name="text"
                               value={userProfile.bio}
                               onChange={(e) => {
@@ -229,7 +277,7 @@ export default function ProfilePage() {
                                 3,
                                 Math.ceil(userProfile.bio.length / 80)
                               )} //adjust as needed
-                              style={{ width: "100%" }}
+                                className="w-full border border-gray-300 rounded-md px-4 py-2 font-[Poppins] text-base resize-none focus:outline-none focus:ring-2 focus:ring-gray-500"
                               id=""
                             />
                           </div>

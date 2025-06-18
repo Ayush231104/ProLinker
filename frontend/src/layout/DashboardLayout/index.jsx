@@ -25,17 +25,34 @@ export default function DashboardLayout({ children }) {
 
   const router = useRouter();
   return (
-    <div className="flex items-center justify-center bg-gray-200 ">
+    <div className="flex justify-center bg-gray-200 h-full ">
       <div className="container">
-        <div className="flex lg:mx-45">
+        <div className="flex lg:mx-[12vw]">
           <div className="hidden sm:flex flex-3/10 flex-col h-fit rounded-lg items-start border-r border-red-50 bg-white p-[10px] mt-3 shadow-lg">
             <div
               onClick={() => {
                 router.push("/profile");
               }}
+              style={{
+                backgroundImage: authState?.user?.userId?.backgroundPicture
+                  ? `url(${authState.user.userId.backgroundPicture})`
+                  : "none",
+                backgroundSize: "cover", // or "contain" if you want to see the whole image
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                width: "100%",
+                height: "5.5rem", // ensure height is set for the background to show
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
               className={` cursor-pointer ${styles.backDropContainer} rounded-lg`}
             >
-              <img className="size-[5.5rem]" src={authState?.user?.userId?.profilePicture} alt="" />
+              <img
+                className="size-[5.5rem]"
+                src={authState?.user?.userId?.profilePicture}
+                alt=""
+              />
             </div>
 
             <h1 className="font-semibold text-2xl pt-8">
@@ -45,7 +62,7 @@ export default function DashboardLayout({ children }) {
               @{authState?.user?.userId?.username}
             </h1>
             <h1 className="font-semibold pt-2">Experience</h1>
-            {userProfile?.pastWork?.slice(0,2).map((work, index) => {
+            {userProfile?.pastWork?.slice(0, 2).map((work, index) => {
               return (
                 <div key={index} className="font-light text-sm">
                   <p>
@@ -59,7 +76,9 @@ export default function DashboardLayout({ children }) {
               return (
                 <div key={index} className="font-light text-sm">
                   <p className="">{education.school}</p>
-                  <p className="">{education.degree} - {education.fieldOfStudy}</p>
+                  <p className="">
+                    {education.degree} - {education.fieldOfStudy}
+                  </p>
                 </div>
               );
             })}
@@ -72,32 +91,41 @@ export default function DashboardLayout({ children }) {
           <div className="hidden sm:flex sm:flex-3/10 flex-col py-[5px] pb-3 pl-2 pr-[5px] mt-3 ml-0 mr-2.5 bg-white h-fit rounded-md border-l border-red-50 shadow-lg">
             <h2 className="font-semibold text-xl ">Top Profiles</h2>
             {authState.all_profiles_fetched &&
-              authState.all_users.slice(0, 10).map((user) => {
-                if (!user.userId) return null;
-                return (
-                  <div
-                    key={user._id}
-                    className="flex items-center gap-3 p-3 shadow-lg rounded-lg"
-                  >
+              authState.all_users
+                .filter(
+                  (user) =>
+                    user?.userId &&
+                    user.userId._id !== authState?.user?.userId?._id
+                )
+                .slice(0, 10)
+                .map((user) => {
+                  if (!user.userId) return null;
+                  return (
                     <div
-                      onClick={() => {
-                        router.push(`/view_profile/${user.userId.username}`);
-                      }}
-                      className="pt-4 cursor-pointer"
+                      key={user._id}
+                      className="flex items-center gap-3 p-3 shadow-lg rounded-lg"
                     >
-                      <img
-                        className=" rounded-full border-2 border-white size-12 object-cover"
-                        src={user.userId.profilePicture}
-                        alt="Profile"
-                      />
+                      <div
+                        onClick={() => {
+                          router.push(`/view_profile/${user.userId.username}`);
+                        }}
+                        className="pt-4 cursor-pointer"
+                      >
+                        <img
+                          className=" rounded-full border-2 border-white size-12 object-cover"
+                          src={user.userId.profilePicture}
+                          alt="Profile"
+                        />
+                      </div>
+                      <div>
+                        <p>{user.userId.name}</p>
+                        <p className="text-sm text-gray-500">
+                          @{user.userId.username}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <p>{user.userId.name}</p>
-                      <p className="text-sm text-gray-500">@{user.userId.username}</p>
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
           </div>
         </div>
       </div>

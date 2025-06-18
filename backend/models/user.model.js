@@ -27,6 +27,10 @@ const UserSchema = new mongoose.Schema({
         type: String,
         default: 'default.jpg'
     },
+    backgroundPicture:{
+        type: String,
+        default: 'default.jpg'
+    },
     createdAt:{
         type: Date,
         default: Date.now

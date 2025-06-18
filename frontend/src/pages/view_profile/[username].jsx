@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import {
   downloadResume,
+  getAboutUser,
   getConnectionsRequest,
   getMyConnectionRequests,
   sendConnectionRequest,
@@ -14,7 +15,7 @@ import {
 import {
   getAllComments,
   getAllPosts,
-  incrementPostLike,
+  // incrementPostLike,
   togglePostLike,
 } from "../../config/redux/action/postAction";
 
@@ -124,6 +125,7 @@ export default function ViewProfilePage({ userProfile }) {
 
   useEffect(() => {
     getUsersPost();
+    dispatch(getAboutUser({ token: localStorage.getItem("token") }));
   }, []);
 
   return (
@@ -136,11 +138,21 @@ export default function ViewProfilePage({ userProfile }) {
                 <div
                   className="w-full h-[25vh] relative rounded-[10px] bg-cover bg-no-repeat"
                   style={{
-                    backgroundImage: `url("https://images.unsplash.com/photo-1506744038136-46273834b3fb")`,
-                  }}
+                        backgroundImage: userProfile?.userId?.backgroundPicture
+                          ? `url(${userProfile.userId.backgroundPicture})`
+                          : "none",
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        backgroundRepeat: "no-repeat",
+                        width: "100%",
+                        height: "8rem",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
                 >
                   <img
-                    className="w-40 h-40 object-cover rounded-full absolute left-8 -bottom-[30%] border-4 border-white"
+                    className="size-[7rem] object-cover rounded-full absolute left-8 -bottom-[40%] border-4 border-white"
                     src={userProfile.userId.profilePicture}
                     alt="backdrop"
                   />

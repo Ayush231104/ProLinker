@@ -11,6 +11,7 @@ import {
   sendConnectionRequest,
   updateProfileData,
   updateUserProfile,
+  uploadBackgroundPicture,
   uploadProfilePicture,
   whatAreMyConnections,
 } from "../controllers/user.controller.js";
@@ -54,6 +55,10 @@ const upload = multer({ storage });
 router
   .route("/update_profile_picture")
   .post(upload.single("profile_picture"), uploadProfilePicture);
+
+router
+.route("/update_background_picture")
+.post(upload.single("background_picture"), uploadBackgroundPicture);
 
 router.route("/register").post(register);
 router.route("/login").post(login);

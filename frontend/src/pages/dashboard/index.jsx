@@ -381,7 +381,7 @@ export default function Dashboard() {
                 onClick={(e) => {
                   e.stopPropagation();
                 }}
-                className="relative bg-white rounded-lg w-[95vw] sm:w-[60vw] lg:w-[40vh] min-h-[40svh] max-w-[1120px] h-[50vh] sm:h-[80vh] p-6 flex flex-col"
+                className="relative bg-white rounded-lg w-[95vw] sm:w-[60vw] lg:w-[70vh] min-h-[40svh] max-w-[1120px] h-[50vh] sm:h-[80vh] p-6 flex flex-col"
               >
                 <h2 className="text-lg font-bold mb-4">Comments</h2>
                 {(!postState.commentsByPostId[postState.selectedPostId] ||
