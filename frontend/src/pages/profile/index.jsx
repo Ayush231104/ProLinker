@@ -228,7 +228,7 @@ export default function ProfilePage() {
                     <img
                       src={userProfile.userId.profilePicture}
                       alt="backdrop"
-                      className="w-40 h-40 rounded-full absolute bottom-[-30%] left-[8%] border-[4px] border-white"
+                      className="size-[8rem] sm:size-[11rem] rounded-full absolute bottom-[-30%] left-[8%] border-[4px] border-white"
                     />
                   </div>
                   <div className="">
@@ -290,7 +290,7 @@ export default function ProfilePage() {
                     <div className={styles.workHistoryContainer}>
                       {userProfile.pastWork.map((work, index) => {
                         return (
-                          <div key={index} className={styles.workHistoryCard}>
+                          <div key={index} className={`shadow-lg ${styles.workHistoryCard}`}>
                             <div className=" relative">
                               <p
                                 style={{
@@ -342,7 +342,7 @@ export default function ProfilePage() {
                         return (
                           <div
                             key={index}
-                            className={`${styles.workHistoryCard}`}
+                            className={`shadow-lg ${styles.workHistoryCard}`}
                           >
                             <div className="relative">
                               <p
