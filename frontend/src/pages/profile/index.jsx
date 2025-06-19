@@ -277,7 +277,7 @@ export default function ProfilePage() {
                                 3,
                                 Math.ceil(userProfile.bio.length / 80)
                               )} //adjust as needed
-                                className="w-full border border-gray-300 rounded-md px-4 py-2 font-[Poppins] text-base resize-none focus:outline-none focus:ring-2 focus:ring-gray-500"
+                              className="w-full border border-gray-300 rounded-md px-4 py-2 font-[Poppins] text-base resize-none focus:outline-none focus:ring-2 focus:ring-gray-500"
                               id=""
                             />
                           </div>
@@ -290,7 +290,10 @@ export default function ProfilePage() {
                     <div className={styles.workHistoryContainer}>
                       {userProfile.pastWork.map((work, index) => {
                         return (
-                          <div key={index} className={`shadow-lg ${styles.workHistoryCard}`}>
+                          <div
+                            key={index}
+                            className={`shadow-lg ${styles.workHistoryCard}`}
+                          >
                             <div className=" relative">
                               <p
                                 style={{
@@ -411,13 +414,13 @@ export default function ProfilePage() {
                 onClick={() => {
                   setIsModalOpen(false);
                 }}
-                className={styles.commentsContainer}
+                className="fixed top-0 left-0 w-screen h-screen z-50 bg-black/70 flex justify-center items-center"
               >
                 <div
                   onClick={(e) => {
                     e.stopPropagation();
                   }}
-                  className={styles.allCommentsContainer}
+                  className="w-[90vw] sm:w-[40vw] bg-white rounded-[10px] relative p-6 flex flex-col gap-5"
                 >
                   <input
                     onChange={handleWorkInputChange}
@@ -460,13 +463,13 @@ export default function ProfilePage() {
                 onClick={() => {
                   setIsEducationModalOpen(false);
                 }}
-                className={styles.commentsContainer}
+                className="fixed top-0 left-0 w-screen h-screen z-50 bg-black/70 flex justify-center items-center"
               >
                 <div
                   onClick={(e) => {
                     e.stopPropagation();
                   }}
-                  className={styles.allCommentsContainer}
+                  className="w-[90vw] sm:w-[40vw] bg-white rounded-[10px] relative p-6 flex flex-col gap-5"
                 >
                   <input
                     onChange={handleEducationInputChange}
