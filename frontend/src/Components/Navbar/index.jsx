@@ -89,8 +89,8 @@ export default function NavBarComponent() {
   }, []);
 
   return (
-    <div className="px-4 sm:px-5 py-3 shadow-lg w-full">
-      <nav className="flex sm:flex-row items-center sm:items-center justify-between gap-3 sm:gap-0 lg:mx-40 pr-5">
+    <div className="py-3 shadow-lg w-full">
+      <nav className="flex sm:flex-row items-center justify-between gap-3 sm:gap-0 lg:px-[10rem]">
         <div className="flex w-full">
           <div className="flex sm:flex-row items-start sm:items-center gap-3 sm:gap-5 w-full sm:w-auto">
             <h1

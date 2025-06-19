@@ -25,9 +25,9 @@ export default function DashboardLayout({ children }) {
 
   const router = useRouter();
   return (
-    <div className="flex-1 justify-center bg-gray-200 min-h-screen">
-      <div className="container">
-        <div className="flex lg:mx-[12vw] bg-gray-200 h-fit">
+    <div className="bg-gray-200 min-h-screen">
+      <div className="sm:max-w-[80vw] mx-auto">
+        <div className="flex flex-col md:flex-row pb-4">
           <div className="hidden sm:flex flex-3/10 flex-col h-fit rounded-lg items-start border-r border-red-50 bg-white p-[10px] mt-3 shadow-lg">
             <div
               onClick={() => {
