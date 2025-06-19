@@ -212,7 +212,7 @@ export default function ProfilePage() {
 
                     <label
                       htmlFor="profilePictureUpload"
-                      className="w-40 h-40 rounded-full absolute bottom-[-30%] left-[8%] border-[4px] border-white z-10 cursor-pointer text-white opacity-0 flex items-center justify-center font-medium hover:bg-black hover:opacity-60 transition-all duration-400"
+                      className="size-[8rem] sm:size-[11rem] rounded-full absolute bottom-[-30%] left-[8%] border-[4px] border-white z-10 cursor-pointer text-white opacity-0 flex items-center justify-center font-medium hover:bg-black hover:opacity-60 transition-all duration-400"
                     >
                       <p>Edit</p>
                     </label>
