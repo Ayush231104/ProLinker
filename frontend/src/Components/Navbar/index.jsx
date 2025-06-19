@@ -16,6 +16,38 @@ export default function NavBarComponent() {
   const [results, setResults] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const inputRef = useRef();
+  const [showDesktopMenu, setShowDesktopMenu] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const desktopMenuRef = useRef();
+  const mobileMenuRef = useRef();
+
+  // Close desktop dropdown
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        desktopMenuRef.current &&
+        !desktopMenuRef.current.contains(event.target)
+      ) {
+        setShowDesktopMenu(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Close mobile dropdown
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target)
+      ) {
+        setShowMobileMenu(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     if (!authState.all_profiles_fetched) {
@@ -69,7 +101,7 @@ export default function NavBarComponent() {
             >
               Pro Linker
             </h1>
-            <div className="sm:hidden">
+            {/* <div className="sm:hidden">
               {authState.profileFetched && (
                 <div
                   onClick={() => {
@@ -84,7 +116,46 @@ export default function NavBarComponent() {
                   />
                 </div>
               )}
-            </div>
+            </div> */}
+            {!isLogin && (
+              <div className="relative sm:hidden" ref={mobileMenuRef}>
+                <div
+                  onClick={() => setShowMobileMenu((prev) => !prev)}
+                  className="cursor-pointer w-14 flex flex-col items-center group"
+                >
+                  <img
+                    className="rounded-full size-10 border-2 border-amber-50 group-hover:brightness-110 group-hover:scale-105 transition duration-200"
+                    src={authState?.user?.userId?.profilePicture}
+                    alt="Profile"
+                  />
+                </div>
+
+                {showMobileMenu && (
+                  <div className="absolute left-0 mt-2 w-40 bg-white shadow-lg rounded-lg z-50">
+                    <div
+                      onClick={() => {
+                        router.push("/profile");
+                        setShowMobileMenu(false);
+                      }}
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-gray-700"
+                    >
+                      View Profile
+                    </div>
+                    <div
+                      onClick={() => {
+                        localStorage.removeItem("token");
+                        dispatch(reset());
+                        router.push("/login");
+                      }}
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-gray-700"
+                    >
+                      Logout
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
             {!isRootPath && (
               <div className="relative w-full sm:w-64" ref={inputRef}>
                 <svg
@@ -206,7 +277,7 @@ export default function NavBarComponent() {
                 </svg>
                 <p className="text-sm">Connections</p>
               </div>
-
+              {/* 
               <div
                 onClick={() => {
                   localStorage.removeItem("token");
@@ -243,6 +314,58 @@ export default function NavBarComponent() {
                 <p className="text-gray-500 text-sm group-hover:text-black transition duration-200">
                   Me
                 </p>
+              </div> */}
+              <div className="relative" ref={desktopMenuRef}>
+                <div
+                  onClick={() => setShowDesktopMenu((prev) => !prev)}
+                  className="cursor-pointer w-8 flex flex-col items-center group"
+                >
+                  <img
+                    className="rounded-full w-6 h-6 object-cover flex-shrink-0 group-hover:brightness-110 group-hover:scale-105 transition duration-200"
+                    src={authState?.user?.userId?.profilePicture}
+                    alt="Profile"
+                  />
+                  <p className="text-gray-500 text-sm group-hover:text-black transition duration-200">
+                    Me
+                  </p>
+                </div>
+
+                {showDesktopMenu && (
+                  <div className="absolute right-0 mt-2 w-80 bg-gray-50 shadow-lg rounded-lg z-50">
+                    <div className="flex gap-2 p-3">
+                      <div>
+                        <img
+                          className="rounded-full size-16 object-cover border-amber-50 border-2 flex-shrink-0 group-hover:brightness-110 group-hover:scale-105 transition duration-200"
+                          src={authState?.user?.userId?.profilePicture}
+                          alt="Profile"
+                        />
+                      </div>
+                      <div>
+                        <p className="text-xl font-semibold ">{authState?.user?.userId?.name}</p>
+                        <p className="text-sm text-gray-400">@{authState?.user?.userId?.username}</p>
+                      </div>
+                    </div>
+                    <div
+                      onClick={() => {
+                        router.push("/profile");
+                        setShowDesktopMenu(false);
+                      }}
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-gray-700"
+                    >
+                      View Profile
+                    </div>
+                    <div
+                      onClick={() => {
+                        localStorage.removeItem("token");
+                        dispatch(reset());
+                        router.push("/login");
+                      }}
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-gray-700"
+                    >
+                      Logout
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}

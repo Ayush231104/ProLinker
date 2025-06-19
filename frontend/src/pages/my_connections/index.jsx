@@ -3,7 +3,7 @@ import UserLayout from '../../layout/UserLayout'
 import DashboardLayout from '../../layout/DashboardLayout'
 import styles from './styles.module.css'
 import { useDispatch, useSelector } from 'react-redux'
-import { acceptConnection, getConnectionsRequest, getMyConnectionRequests } from '../../config/redux/action/authAction'
+import { acceptConnection, getAboutUser, getConnectionsRequest, getMyConnectionRequests } from '../../config/redux/action/authAction'
 import { BASE_URL } from '../../config'
 import { useRouter } from 'next/router'
 
@@ -24,7 +24,7 @@ export default function MyConnectionsPage() {
     if(authState.connectionRequest.length !== 0){
       console.log(authState.connectionRequest)
     }
-
+    dispatch(getAboutUser({ token: localStorage.getItem("token") }));
   },[authState.connectionRequest])
 
   return (
